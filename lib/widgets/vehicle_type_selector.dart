@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 
 class VehicleTypeSelector extends StatelessWidget {
   final String selectedVehicleType;
