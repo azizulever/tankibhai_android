@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../controllers/mileage_controller.dart';
+import 'package:mileage_calculator/controllers/mileage_controller.dart';
 
 class StatsCard extends StatelessWidget {
-  final MileageGetxController controller; // Change here
+  final MileageGetxController controller;
 
   const StatsCard({super.key, required this.controller});
 
@@ -74,14 +74,18 @@ class StatsCard extends StatelessWidget {
                     Icons.trending_up,
                   ),
                   _buildStatItem(
-                    'Total Distance',
-                    '${controller.calculateTotalDistance().toStringAsFixed(1)} km',
-                    Icons.map,
+                    'Avg. Fuel Cost',
+                    controller.calculateAverageFuelCost() != null
+                        ? '${controller.calculateAverageFuelCost()!.toStringAsFixed(2)}/l'
+                        : 'N/A',
+                    Icons.attach_money,
                   ),
                   _buildStatItem(
-                    'Total Fuel',
-                    '${controller.calculateTotalFuel().toStringAsFixed(2)} L',
-                    Icons.local_gas_station,
+                    'Latest Fuel Cost',
+                    controller.calculateLatestFuelCost() != null
+                        ? '${controller.calculateLatestFuelCost()!.toStringAsFixed(2)}/l'
+                        : 'N/A',
+                    Icons.trending_flat,
                   ),
                 ],
               ),

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import '../controllers/mileage_controller.dart';
-import '../models/fuel_entry.dart';
-import '../widgets/stats_card.dart';
-
+import 'package:mileage_calculator/controllers/mileage_controller.dart';
+import 'package:mileage_calculator/models/fuel_entry.dart';
+import 'package:mileage_calculator/widgets/stats_card.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MileageGetxController>(
-      // Change here
-      init: MileageGetxController(), // Change here
+      init: MileageGetxController(),
       builder: (controller) {
         return HomePageContent(controller: controller);
       },
@@ -21,7 +19,7 @@ class HomePage extends StatelessWidget {
 }
 
 class HomePageContent extends StatelessWidget {
-  final MileageGetxController controller; // Change here
+  final MileageGetxController controller;
 
   const HomePageContent({super.key, required this.controller});
 
@@ -29,7 +27,7 @@ class HomePageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mileage Calculator'),
+        title: const Text('Fuel Log'),
         centerTitle: true,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
@@ -76,10 +74,7 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  controller.selectedVehicleType == 'Car'
-                      ? Icons.directions_car
-                      : Icons.two_wheeler,
-                  color: const Color(0xFF0A2463),
+                  controller.selectedVehicleType == 'Car' ? Icons.directions_car : Icons.two_wheeler, color: const Color(0xFF0A2463),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -236,6 +231,9 @@ class HomePageContent extends StatelessWidget {
     final fuelAmountController = TextEditingController(
       text: entry.fuelAmount.toString(),
     );
+    final fuelCostController = TextEditingController(
+    text: entry.fuelCost.toString(),
+  );
 
     showDialog(
       context: context,
@@ -369,7 +367,32 @@ class HomePageContent extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.number,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                  controller: fuelCostController,
+                  decoration: InputDecoration(
+                    labelText: 'Total Fuel Cost',
+                    prefixIcon: const Icon(
+                      Icons.attach_money,
+                      color: Color(0xFF0A2463),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF0A2463),
+                        width: 2,
+                      ),
+                    ),
+                    floatingLabelStyle: const TextStyle(
+                      color: Color(0xFF0A2463),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -393,18 +416,20 @@ class HomePageContent extends StatelessWidget {
                     ).parse(dateController.text);
                     final odometer = double.parse(odometerController.text);
                     final fuelAmount = double.parse(fuelAmountController.text);
+                    final fuelCost = double.parse(fuelCostController.text);
 
-                    if (odometer <= 0 || fuelAmount <= 0) {
-                      throw const FormatException(
-                        'Values must be greater than zero',
-                      );
-                    }
+                    if (odometer <= 0 || fuelAmount <= 0 || fuelCost < 0) {
+                    throw const FormatException(
+                      'Values must be greater than zero',
+                    );
+                  }
 
                     controller.updateFuelEntry(
                       index,
                       date,
                       odometer,
                       fuelAmount,
+                      fuelCost,
                     );
                     Navigator.of(context).pop();
                   } catch (e) {
@@ -439,6 +464,7 @@ class HomePageContent extends StatelessWidget {
     );
     final odometerController = TextEditingController();
     final fuelAmountController = TextEditingController();
+    final fuelCostController = TextEditingController();
 
     if (controller.filteredEntries.isNotEmpty) {
       odometerController.text =
@@ -579,7 +605,32 @@ class HomePageContent extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.number,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
+                                  TextFormField(
+                  controller: fuelCostController,
+                  decoration: InputDecoration(
+                    labelText: 'Total Fuel Cost',
+                    prefixIcon: const Icon(
+                      Icons.attach_money,
+                      color: Color(0xFF0A2463),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF0A2463),
+                        width: 2,
+                      ),
+                    ),
+                    floatingLabelStyle: const TextStyle(
+                      color: Color(0xFF0A2463),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -603,18 +654,20 @@ class HomePageContent extends StatelessWidget {
                     ).parse(dateController.text);
                     final odometer = double.parse(odometerController.text);
                     final fuelAmount = double.parse(fuelAmountController.text);
+                    final fuelCost = double.parse(fuelCostController.text);
 
-                    if (odometer <= 0 || fuelAmount <= 0) {
-                      throw const FormatException(
-                        'Values must be greater than zero',
-                      );
-                    }
+                    if (odometer <= 0 || fuelAmount <= 0 || fuelCost < 0) {
+                    throw const FormatException(
+                      'Values must be greater than zero',
+                    );
+                  }
 
                     controller.addFuelEntry(
                       date,
                       odometer,
                       fuelAmount,
                       controller.selectedVehicleType,
+                      fuelCost,
                     );
                     Navigator.of(context).pop();
                   } catch (e) {

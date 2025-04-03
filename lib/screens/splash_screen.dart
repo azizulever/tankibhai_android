@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomePage()),
       );
@@ -56,20 +56,20 @@ class _SplashScreenState extends State<SplashScreen>
                 children: [
                   Icon(
                     Icons.directions_car,
-                    size: 80,
+                    size: 50,
                     color: const Color(0xFF0A2463),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   Icon(
                     Icons.two_wheeler,
-                    size: 80,
-                    color: const Color(0xFF0A2463).withOpacity(0.7),
+                    size: 50,
+                    color: const Color(0xFF0A2463),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 8),
               const Text(
-                'Mileage Calculator',
+                'Fuel Log: Bikes & Cars',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

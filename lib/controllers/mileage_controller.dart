@@ -63,7 +63,7 @@ class MileageGetxController extends GetxController {
   }
 
   void addFuelEntry(
-      DateTime date, double odometer, double fuelAmount, String vehicleType) {
+      DateTime date, double odometer, double fuelAmount, String vehicleType, double fuelCost) {
     _fuelEntries.insert(
       0,
       FuelEntry(
@@ -71,6 +71,7 @@ class MileageGetxController extends GetxController {
         odometer: odometer,
         fuelAmount: fuelAmount,
         vehicleType: vehicleType,
+        fuelCost: fuelCost,
       ),
     );
 
@@ -97,7 +98,7 @@ class MileageGetxController extends GetxController {
   }
 
   void updateFuelEntry(
-      int index, DateTime date, double odometer, double fuelAmount) {
+      int index, DateTime date, double odometer, double fuelAmount, double fuelCost) {
     final vehicleType = filteredEntries[index].vehicleType;
     final originalIndex = _fuelEntries.indexOf(filteredEntries[index]);
 
@@ -107,6 +108,7 @@ class MileageGetxController extends GetxController {
         odometer: odometer,
         fuelAmount: fuelAmount,
         vehicleType: vehicleType,
+        fuelCost: fuelCost,
       );
 
       _fuelEntries.sort((a, b) => b.date.compareTo(a.date));
@@ -203,4 +205,32 @@ class MileageGetxController extends GetxController {
     }
     return totalFuel;
   }
+
+  double? calculateAverageFuelCost() {
+  double? avgCost;
+  double totalCost = 0;
+  double totalFuel = 0;
+
+  if (filteredEntries.isNotEmpty) {
+    for (var entry in filteredEntries) {
+      totalCost += entry.fuelCost;
+      totalFuel += entry.fuelAmount;
+    }
+    
+    if (totalFuel > 0) {
+      avgCost = totalCost / totalFuel;
+    }
+  }
+  return avgCost;
+}
+
+double? calculateLatestFuelCost() {
+  if (filteredEntries.isNotEmpty) {
+    final latestEntry = filteredEntries[0];
+    if (latestEntry.fuelAmount > 0) {
+      return latestEntry.fuelCost / latestEntry.fuelAmount;
+    }
+  }
+  return null;
+}
 }
