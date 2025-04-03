@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/fuel_entry.dart';
-import '../controllers/mileage_controller.dart';
+import 'package:mileage_calculator/controllers/mileage_controller.dart';
+import 'package:mileage_calculator/models/fuel_entry.dart';
 import 'package:intl/intl.dart';
 
 class FuelEntryList extends StatelessWidget {

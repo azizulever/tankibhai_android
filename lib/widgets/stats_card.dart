@@ -1,4 +1,3 @@
-// lib/widgets/stats_card.dart
 import 'package:flutter/material.dart';
 import '../controllers/mileage_controller.dart';
 
