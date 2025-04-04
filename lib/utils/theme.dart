@@ -37,14 +37,7 @@ final appTheme = ThemeData(
           return Colors.white;
         },
       ),
-      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) {
-          if (states.contains(MaterialState.selected)) {
-            return Colors.white;
-          }
-          return const Color(0xFF0A2463);
-        },
-      ),
+      // Removed foregroundColor from here!
       overlayColor: MaterialStateProperty.all(Colors.transparent),
     ),
   ),

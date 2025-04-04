@@ -26,19 +26,6 @@ class VehicleTypeSelector extends StatelessWidget {
             SegmentedButton<String>(
               segments: [
                 ButtonSegment<String>(
-                  value: 'Car',
-                  icon: Icon(
-                    Icons.directions_car,
-                    color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
-                  ),
-                  label: Text(
-                    'Car',
-                    style: TextStyle(
-                      color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
-                    ),
-                  ),
-                ),
-                ButtonSegment<String>(
                   value: 'Bike',
                   icon: Icon(
                     Icons.two_wheeler,
@@ -51,6 +38,19 @@ class VehicleTypeSelector extends StatelessWidget {
                     ),
                   ),
                 ),
+                ButtonSegment<String>(
+                  value: 'Car',
+                  icon: Icon(
+                    Icons.directions_car,
+                    color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
+                  ),
+                  label: Text(
+                    'Car',
+                    style: TextStyle(
+                      color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
+                    ),
+                  ),
+                ),
               ],
               selected: {selectedVehicleType},
               onSelectionChanged: (Set<String> newSelection) {
@@ -60,12 +60,12 @@ class VehicleTypeSelector extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.resolveWith<Color>(
                   (states) {
                     if (states.contains(MaterialState.selected)) {
-                      return const Color(0xFF0A2463); // Dark blue when selected
+                      return const Color(0xFF0A2463);
                     }
-                    return Colors.white; // White when unselected
+                    return Colors.white;
                   },
                 ),
-                overlayColor: MaterialStateProperty.all(Colors.transparent), // Removes unwanted highlight effect
+                overlayColor: MaterialStateProperty.all(Colors.transparent),
               ),
             ),
           ],

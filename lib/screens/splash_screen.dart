@@ -55,21 +55,15 @@ class _SplashScreenState extends State<SplashScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.directions_car,
-                    size: 50,
-                    color: const Color(0xFF0A2463),
-                  ),
-                  const SizedBox(width: 10),
-                  Icon(
-                    Icons.two_wheeler,
-                    size: 50,
+                    Icons.local_gas_station,
+                    size: 80,
                     color: const Color(0xFF0A2463),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               const Text(
-                'Fuel Log: Bikes & Cars',
+                'Fuel Log',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,

@@ -48,19 +48,6 @@ class HomePageContent extends StatelessWidget {
                   SegmentedButton<String>(
                     segments: [
                       ButtonSegment<String>(
-                        value: 'Car',
-                        icon: Icon(
-                          Icons.directions_car,
-                          color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
-                        ),
-                        label: Text(
-                          'Car',
-                          style: TextStyle(
-                            color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
-                          ),
-                        ),
-                      ),
-                      ButtonSegment<String>(
                         value: 'Bike',
                         icon: Icon(
                           Icons.two_wheeler,
@@ -70,6 +57,19 @@ class HomePageContent extends StatelessWidget {
                           'Bike',
                           style: TextStyle(
                             color: controller.selectedVehicleType == 'Bike' ? Colors.white : null,
+                          ),
+                        ),
+                      ),
+                      ButtonSegment<String>(
+                        value: 'Car',
+                        icon: Icon(
+                          Icons.directions_car,
+                          color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
+                        ),
+                        label: Text(
+                          'Car',
+                          style: TextStyle(
+                            color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
                           ),
                         ),
                       ),
