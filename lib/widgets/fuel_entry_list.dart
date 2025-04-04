@@ -40,7 +40,6 @@ class FuelEntryList extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Odometer: ${entry.odometer.toStringAsFixed(1)} km'),
-                // Text('Fuel: ${entry.fuelAmount.toStringAsFixed(2)} liters'),
                 Text('Fuel: ${entry.fuelAmount.toStringAsFixed(2)} liters - ${entry.fuelCost.toStringAsFixed(2)} cost'),
                 if (mileage != null)
                   Container(

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
 import 'package:mileage_calculator/models/fuel_entry.dart';
 import 'package:mileage_calculator/widgets/stats_card.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -48,13 +49,29 @@ class HomePageContent extends StatelessWidget {
                     segments: [
                       ButtonSegment<String>(
                         value: 'Car',
-                        icon: const Icon(Icons.directions_car),
-                        label: const Text('Car'),
+                        icon: Icon(
+                          Icons.directions_car,
+                          color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
+                        ),
+                        label: Text(
+                          'Car',
+                          style: TextStyle(
+                            color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
+                          ),
+                        ),
                       ),
                       ButtonSegment<String>(
                         value: 'Bike',
-                        icon: const Icon(Icons.two_wheeler),
-                        label: const Text('Bike'),
+                        icon: Icon(
+                          Icons.two_wheeler,
+                          color: controller.selectedVehicleType == 'Bike' ? Colors.white : null,
+                        ),
+                        label: Text(
+                          'Bike',
+                          style: TextStyle(
+                            color: controller.selectedVehicleType == 'Bike' ? Colors.white : null,
+                          ),
+                        ),
                       ),
                     ],
                     selected: {controller.selectedVehicleType},
@@ -123,6 +140,11 @@ class HomePageContent extends StatelessWidget {
                               ? controller.filteredEntries[index + 1]
                               : null,
                         );
+                        
+                        // Calculate per liter cost
+                        final perLiterCost = entry.fuelAmount > 0 
+                            ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
+                            : "N/A";
 
                         return Card(
                           margin: const EdgeInsets.symmetric(
@@ -170,12 +192,25 @@ class HomePageContent extends StatelessWidget {
                                       ).withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: Text(
-                                      'Mileage: ${mileage.toStringAsFixed(2)} km/l',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF0A2463),
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Mileage: ${mileage.toStringAsFixed(2)} km/l',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF0A2463),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '- ৳${perLiterCost}/l',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF0A2463),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                               ],

@@ -7,7 +7,8 @@ class VehicleTypeSelector extends StatelessWidget {
   const VehicleTypeSelector({
     required this.selectedVehicleType,
     required this.onVehicleTypeChanged,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +27,46 @@ class VehicleTypeSelector extends StatelessWidget {
               segments: [
                 ButtonSegment<String>(
                   value: 'Car',
-                  icon: const Icon(Icons.directions_car),
-                  label: const Text('Car'),
+                  icon: Icon(
+                    Icons.directions_car,
+                    color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
+                  ),
+                  label: Text(
+                    'Car',
+                    style: TextStyle(
+                      color: selectedVehicleType == 'Car' ? Colors.white : const Color(0xFF0A2463),
+                    ),
+                  ),
                 ),
                 ButtonSegment<String>(
                   value: 'Bike',
-                  icon: const Icon(Icons.two_wheeler),
-                  label: const Text('Bike'),
+                  icon: Icon(
+                    Icons.two_wheeler,
+                    color: selectedVehicleType == 'Bike' ? Colors.white : const Color(0xFF0A2463),
+                  ),
+                  label: Text(
+                    'Bike',
+                    style: TextStyle(
+                      color: selectedVehicleType == 'Bike' ? Colors.white : const Color(0xFF0A2463),
+                    ),
+                  ),
                 ),
               ],
               selected: {selectedVehicleType},
               onSelectionChanged: (Set<String> newSelection) {
                 onVehicleTypeChanged(newSelection.first);
               },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return const Color(0xFF0A2463); // Dark blue when selected
+                    }
+                    return Colors.white; // White when unselected
+                  },
+                ),
+                overlayColor: MaterialStateProperty.all(Colors.transparent), // Removes unwanted highlight effect
+              ),
             ),
           ],
         ),

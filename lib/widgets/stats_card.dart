@@ -9,7 +9,7 @@ class StatsCard extends StatelessWidget {
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF0A2463)),
+        Icon(icon, color: const Color(0xFF0A2463), size: 23,),
         const SizedBox(height: 4),
         Text(
           label,
@@ -17,7 +17,7 @@ class StatsCard extends StatelessWidget {
         ),
         Text(
           value,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
       ],
     );

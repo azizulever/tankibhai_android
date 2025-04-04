@@ -45,6 +45,7 @@ final appTheme = ThemeData(
           return const Color(0xFF0A2463);
         },
       ),
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
     ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -56,8 +57,3 @@ final appTheme = ThemeData(
     thickness: 1,
   ),
 );
-
-
-
-
-
