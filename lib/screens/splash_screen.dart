@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 8),
               const Text(
-                'Fuel Log',
+                'TankiBhai',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
               const SizedBox(height: 10),
               Text(
-                'Track your vehicle efficiency',
+                'Track Fuel & Drive Smart',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[600],

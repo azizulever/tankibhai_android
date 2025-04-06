@@ -51,12 +51,18 @@ class HomePageContent extends StatelessWidget {
                         value: 'Bike',
                         icon: Icon(
                           Icons.two_wheeler,
-                          color: controller.selectedVehicleType == 'Bike' ? Colors.white : null,
+                          color:
+                              controller.selectedVehicleType == 'Bike'
+                                  ? Colors.white
+                                  : null,
                         ),
                         label: Text(
                           'Bike',
                           style: TextStyle(
-                            color: controller.selectedVehicleType == 'Bike' ? Colors.white : null,
+                            color:
+                                controller.selectedVehicleType == 'Bike'
+                                    ? Colors.white
+                                    : null,
                           ),
                         ),
                       ),
@@ -64,12 +70,18 @@ class HomePageContent extends StatelessWidget {
                         value: 'Car',
                         icon: Icon(
                           Icons.directions_car,
-                          color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
+                          color:
+                              controller.selectedVehicleType == 'Car'
+                                  ? Colors.white
+                                  : null,
                         ),
                         label: Text(
                           'Car',
                           style: TextStyle(
-                            color: controller.selectedVehicleType == 'Car' ? Colors.white : null,
+                            color:
+                                controller.selectedVehicleType == 'Car'
+                                    ? Colors.white
+                                    : null,
                           ),
                         ),
                       ),
@@ -91,7 +103,10 @@ class HomePageContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  controller.selectedVehicleType == 'Car' ? Icons.directions_car : Icons.two_wheeler, color: const Color(0xFF0A2463),
+                  controller.selectedVehicleType == 'Car'
+                      ? Icons.directions_car
+                      : Icons.two_wheeler,
+                  color: const Color(0xFF0A2463),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -140,11 +155,13 @@ class HomePageContent extends StatelessWidget {
                               ? controller.filteredEntries[index + 1]
                               : null,
                         );
-                        
+
                         // Calculate per liter cost
-                        final perLiterCost = entry.fuelAmount > 0 
-                            ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
-                            : "N/A";
+                        final perLiterCost =
+                            entry.fuelAmount > 0
+                                ? (entry.fuelCost / entry.fuelAmount)
+                                    .toStringAsFixed(2)
+                                : "N/A";
 
                         return Card(
                           margin: const EdgeInsets.symmetric(
@@ -184,7 +201,7 @@ class HomePageContent extends StatelessWidget {
                                     margin: const EdgeInsets.only(top: 4),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
-                                      vertical: 2,
+                                      vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
                                       color: const Color(
@@ -192,23 +209,36 @@ class HomePageContent extends StatelessWidget {
                                       ).withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Mileage: ${mileage.toStringAsFixed(2)} km/l',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF0A2463),
-                                          ),
+                                        // First row for mileage
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Mileage: ${mileage.toStringAsFixed(1)} km/l',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFF0A2463),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          '- ৳${perLiterCost}/l',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF0A2463),
-                                          ),
+                                        const SizedBox(height: 2),
+                                        // Second row for cost per liter
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'Cost: ৳${perLiterCost}/l',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFF0A2463),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -235,8 +265,80 @@ class HomePageContent extends StatelessWidget {
                                     Icons.delete,
                                     color: Colors.red,
                                   ),
-                                  onPressed:
-                                      () => controller.deleteEntry(index),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
+                                          title: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.warning_amber_rounded,
+                                                color: Colors.red,
+                                              ),
+                                              const SizedBox(width: 12),
+                                              const Text(
+                                                'Confirm Deletion',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          content: const Text(
+                                            'Are you sure you want to delete this entry? This action cannot be undone.',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: TextButton.styleFrom(
+                                                foregroundColor:
+                                                    Colors.grey[700],
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 12,
+                                                    ),
+                                              ),
+                                              child: const Text('CANCEL'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () {
+                                                controller.deleteEntry(index);
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: FilledButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                                foregroundColor: Colors.white,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 12,
+                                                    ),
+                                              ),
+                                              child: const Text('DELETE'),
+                                            ),
+                                          ],
+                                          actionsPadding:
+                                              const EdgeInsets.fromLTRB(
+                                                16,
+                                                0,
+                                                16,
+                                                16,
+                                              ),
+                                          actionsAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -267,8 +369,8 @@ class HomePageContent extends StatelessWidget {
       text: entry.fuelAmount.toString(),
     );
     final fuelCostController = TextEditingController(
-    text: entry.fuelCost.toString(),
-  );
+      text: entry.fuelCost.toString(),
+    );
 
     showDialog(
       context: context,
@@ -404,30 +506,30 @@ class HomePageContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                  controller: fuelCostController,
-                  decoration: InputDecoration(
-                    labelText: 'Total Fuel Cost',
-                    prefixIcon: const Icon(
-                      Icons.attach_money,
-                      color: Color(0xFF0A2463),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
+                    controller: fuelCostController,
+                    decoration: InputDecoration(
+                      labelText: 'Total Fuel Cost (৳)',
+                      prefixIcon: const Icon(
+                        Icons.attach_money,
                         color: Color(0xFF0A2463),
-                        width: 2,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF0A2463),
+                          width: 2,
+                        ),
+                      ),
+                      floatingLabelStyle: const TextStyle(
+                        color: Color(0xFF0A2463),
                       ),
                     ),
-                    floatingLabelStyle: const TextStyle(
-                      color: Color(0xFF0A2463),
-                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 8),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -454,10 +556,10 @@ class HomePageContent extends StatelessWidget {
                     final fuelCost = double.parse(fuelCostController.text);
 
                     if (odometer <= 0 || fuelAmount <= 0 || fuelCost < 0) {
-                    throw const FormatException(
-                      'Values must be greater than zero',
-                    );
-                  }
+                      throw const FormatException(
+                        'Values must be greater than zero',
+                      );
+                    }
 
                     controller.updateFuelEntry(
                       index,
@@ -641,31 +743,31 @@ class HomePageContent extends StatelessWidget {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16),
-                                  TextFormField(
-                  controller: fuelCostController,
-                  decoration: InputDecoration(
-                    labelText: 'Total Fuel Cost',
-                    prefixIcon: const Icon(
-                      Icons.attach_money,
-                      color: Color(0xFF0A2463),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(
+                  TextFormField(
+                    controller: fuelCostController,
+                    decoration: InputDecoration(
+                      labelText: 'Total Fuel Cost',
+                      prefixIcon: const Icon(
+                        Icons.attach_money,
                         color: Color(0xFF0A2463),
-                        width: 2,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF0A2463),
+                          width: 2,
+                        ),
+                      ),
+                      floatingLabelStyle: const TextStyle(
+                        color: Color(0xFF0A2463),
                       ),
                     ),
-                    floatingLabelStyle: const TextStyle(
-                      color: Color(0xFF0A2463),
-                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 8),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),
@@ -692,10 +794,10 @@ class HomePageContent extends StatelessWidget {
                     final fuelCost = double.parse(fuelCostController.text);
 
                     if (odometer <= 0 || fuelAmount <= 0 || fuelCost < 0) {
-                    throw const FormatException(
-                      'Values must be greater than zero',
-                    );
-                  }
+                      throw const FormatException(
+                        'Values must be greater than zero',
+                      );
+                    }
 
                     controller.addFuelEntry(
                       date,
