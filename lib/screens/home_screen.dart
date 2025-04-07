@@ -28,7 +28,7 @@ class HomePageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TankiBhai'),
+        title: const Text('Fuel Log'),
         centerTitle: true,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),

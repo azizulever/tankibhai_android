@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mileage_calculator/screens/splash_screen.dart';
 import 'package:mileage_calculator/utils/theme.dart';
-import 'home/screens/splash_screen.dart';
 
 class MileageCalculatorApp extends StatelessWidget {
   const MileageCalculatorApp({super.key});
