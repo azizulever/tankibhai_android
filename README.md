@@ -1,6 +1,6 @@
-# mileage_calculator
+# TankiBhai
 
-A new Flutter project.
+It calculate the Mileage and Fuel per liter price for Cars and Bikes.
 
 ## Getting Started
 
