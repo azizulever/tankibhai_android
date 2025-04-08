@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Fuel Log'),
+            title: const Text('TankiBhai - Fuel Tracker'),
             centerTitle: true,
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           ),
