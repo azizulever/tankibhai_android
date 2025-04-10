@@ -37,7 +37,6 @@ final appTheme = ThemeData(
           return Colors.white;
         },
       ),
-      // Removed foregroundColor from here!
       overlayColor: MaterialStateProperty.all(Colors.transparent),
     ),
   ),

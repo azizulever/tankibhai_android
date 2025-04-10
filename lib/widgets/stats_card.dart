@@ -8,7 +8,7 @@ class StatsCard extends StatelessWidget {
 
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Container(
-      width: 120, // Fixed width for each stat item
+      width: 120,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:mileage_calculator/models/fuel_entry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/fuel_entry.dart';
 
 class MileageGetxController extends GetxController {
   String _selectedVehicleType = 'Car';
