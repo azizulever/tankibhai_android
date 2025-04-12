@@ -1,6 +1,6 @@
 # TankiBhai
 
-It calculate the Mileage and Fuel per liter price for Cars and Bikes.
+It calculates the Mileage and Fuel per liter price for Cars and Bikes.
 
 ## Getting Started
 
