@@ -9,7 +9,7 @@ class MileageCalculatorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Mileage Calculator',
+      title: 'TankiBhai',
       theme: appTheme,
       home: const SplashScreen(),
     );
