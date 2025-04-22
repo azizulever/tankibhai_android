@@ -119,9 +119,9 @@ class StatsCard extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               crossAxisCount: screenWidth > 600 ? 3 : 2,
-              childAspectRatio: 2.4,  // Increased from 2.0 to make boxes more compact
-              crossAxisSpacing: 6,    // Reduced from 8
-              mainAxisSpacing: 6,     // Reduced from 8
+              childAspectRatio: 2.4,
+              crossAxisSpacing: 6,
+              mainAxisSpacing: 6,
               children: [
                 _buildStatItem(
                   'Avg. Mileage',
