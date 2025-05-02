@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 
+// Define our colors
+const Color primaryColor = Color(0xFF0045ED); // Blue
+const Color backgroundColor = Color(0xFFF8FAFC); // Light Gray
+
 final appTheme = ThemeData(
   useMaterial3: true,
+  
+  // Color Scheme
   colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color(0xFF0A2463),
+    seedColor: primaryColor,
     brightness: Brightness.light,
-    primary: const Color(0xFF0A2463),
+    primary: primaryColor,
     onPrimary: Colors.white,
-    secondary: const Color(0xFF153B83),
-    onSecondary: Colors.white,
-    background: Colors.white,
-    surface: Colors.white,
-    onSurface: Colors.black,
+    background: backgroundColor,
+    surface: backgroundColor,
   ),
-  scaffoldBackgroundColor: Colors.white,
+  
+  // General Theme Properties
+  scaffoldBackgroundColor: backgroundColor,
+  
+  // App Bar Theme
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF0A2463),
+    backgroundColor: primaryColor,
     foregroundColor: Colors.white,
     centerTitle: true,
     elevation: 0,
   ),
+  
+  // Card Theme
   cardTheme: CardTheme(
     color: Colors.white,
     elevation: 2,
@@ -27,25 +36,47 @@ final appTheme = ThemeData(
       borderRadius: BorderRadius.circular(12),
     ),
   ),
+  
+  // Button Themes
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: primaryColor,
+    foregroundColor: Colors.white,
+  ),
+  
+  // Segmented Button Theme
   segmentedButtonTheme: SegmentedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-        (states) {
-          if (states.contains(MaterialState.selected)) {
-            return const Color(0xFF0A2463);
-          }
-          return Colors.white;
-        },
-      ),
+      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+        return states.contains(MaterialState.selected) 
+            ? primaryColor 
+            : Colors.white;
+      }),
+      foregroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+        return states.contains(MaterialState.selected) 
+            ? Colors.white 
+            : primaryColor;
+      }),
       overlayColor: MaterialStateProperty.all(Colors.transparent),
     ),
   ),
-  floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Color(0xFF153B83),
-    foregroundColor: Colors.white,
-  ),
-  dividerTheme: const DividerThemeData(
-    color: Color(0xFFE0E0E0),
+  
+  // Divider Theme
+  dividerTheme: DividerThemeData(
+    color: backgroundColor.darker(10),
     thickness: 1,
   ),
 );
+
+// Extension to darken colors slightly
+extension ColorExtension on Color {
+  Color darker(int percent) {
+    assert(1 <= percent && percent <= 100);
+    final value = 1 - percent / 100;
+    return Color.fromARGB(
+      alpha,
+      (red * value).round(),
+      (green * value).round(),
+      (blue * value).round(),
+    );
+  }
+}
