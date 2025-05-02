@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,17 +22,14 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
     _controller.forward();
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomePage()),
-      );
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(builder: (_) => const HomePage()),
+      // );
     });
   }
 
@@ -49,37 +47,46 @@ class _SplashScreenState extends State<SplashScreen>
         child: FadeTransition(
           opacity: _animation,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.local_gas_station,
-                    size: 80,
-                    color: const Color(0xFF0A2463),
+              Expanded(
+                flex: 5,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/app_logo.svg',
+                    width: 120,
+                    height: 120,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'TankiBhai',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF0A2463),
                 ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                'Track Fuel & Drive Smart',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Text(
+                      'Track Fuel & Drive Smart',
+                      style: TextStyle(fontSize: 14, color: Colors.black),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 50,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: Color(0xFFE0E0E0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: const LinearProgressIndicator(
+                            minHeight: 3,
+                            backgroundColor: Colors.transparent,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 60),
+                  ],
                 ),
               ),
-              const SizedBox(height: 30),
-              const CircularProgressIndicator(),
             ],
           ),
         ),
