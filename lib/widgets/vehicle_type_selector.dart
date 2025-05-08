@@ -13,7 +13,7 @@ class VehicleTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -41,7 +41,7 @@ class VehicleTypeSelector extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 40),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 30),
           decoration: BoxDecoration(
             color: isSelected ? Colors.transparent : Colors.white,
             borderRadius: BorderRadius.circular(8),

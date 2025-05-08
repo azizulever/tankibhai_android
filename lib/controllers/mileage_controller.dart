@@ -207,30 +207,50 @@ class MileageGetxController extends GetxController {
   }
 
   double? calculateAverageFuelCost() {
-  double? avgCost;
-  double totalCost = 0;
-  double totalFuel = 0;
+    double? avgCost;
+    double totalCost = 0;
+    double totalFuel = 0;
 
-  if (filteredEntries.isNotEmpty) {
-    for (var entry in filteredEntries) {
-      totalCost += entry.fuelCost;
-      totalFuel += entry.fuelAmount;
+    if (filteredEntries.isNotEmpty) {
+      for (var entry in filteredEntries) {
+        totalCost += entry.fuelCost;
+        totalFuel += entry.fuelAmount;
+      }
+      
+      if (totalFuel > 0) {
+        avgCost = totalCost / totalFuel;
+      }
     }
-    
-    if (totalFuel > 0) {
-      avgCost = totalCost / totalFuel;
-    }
+    return avgCost;
   }
-  return avgCost;
-}
 
-double? calculateLatestFuelCost() {
-  if (filteredEntries.isNotEmpty) {
-    final latestEntry = filteredEntries[0];
-    if (latestEntry.fuelAmount > 0) {
-      return latestEntry.fuelCost / latestEntry.fuelAmount;
+  double? calculateLatestFuelCost() {
+    if (filteredEntries.isNotEmpty) {
+      final latestEntry = filteredEntries[0];
+      if (latestEntry.fuelAmount > 0) {
+        return latestEntry.fuelCost / latestEntry.fuelAmount;
+      }
     }
+    return null;
   }
-  return null;
-}
+
+  // Returns average mileage for the selected vehicle type
+  double get averageMileage {
+    return calculateAverageMileage() ?? 0.0;
+  }
+  
+  // Returns the most recent mileage calculation
+  double get lastMileage {
+    return calculateLatestMileage() ?? 0.0;
+  }
+  
+  // Returns average fuel price for the selected vehicle type
+  double get averageFuelPrice {
+    return calculateAverageFuelCost() ?? 0.0;
+  }
+  
+  // Returns the most recent fuel price
+  double get lastFuelPrice {
+    return calculateLatestFuelCost() ?? 0.0;
+  }
 }
