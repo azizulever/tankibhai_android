@@ -23,7 +23,7 @@ class StatsCard extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
             blurRadius: 3,
-            offset: const Offset(0, 1),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -52,7 +52,7 @@ class StatsCard extends StatelessWidget {
           Text(
             value,
             style: const TextStyle(
-              fontSize: 14, 
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: Color(0xFF0A2463),
             ),
@@ -68,13 +68,11 @@ class StatsCard extends StatelessWidget {
     // Get screen width to adjust UI based on device size
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 360;
-    
+
     return Card(
       margin: EdgeInsets.all(isSmallScreen ? 6 : 12),
       elevation: 1.5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: Padding(
         padding: EdgeInsets.all(isSmallScreen ? 10 : 14),
         child: Column(
@@ -101,7 +99,7 @@ class StatsCard extends StatelessWidget {
                   child: Text(
                     '${controller.selectedVehicleType} Performance',
                     style: TextStyle(
-                      fontSize: isSmallScreen ? 15 : 16, 
+                      fontSize: isSmallScreen ? 15 : 16,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF0A2463),
                     ),
@@ -111,7 +109,7 @@ class StatsCard extends StatelessWidget {
               ],
             ),
             Divider(
-              height: 20, 
+              height: 20,
               color: const Color(0xFF0A2463).withOpacity(0.2),
               thickness: 0.8,
             ),
@@ -121,7 +119,7 @@ class StatsCard extends StatelessWidget {
               crossAxisCount: screenWidth > 600 ? 3 : 2,
               childAspectRatio: 2.4,
               crossAxisSpacing: 6,
-              mainAxisSpacing: 6,
+              mainAxisSpacing: 10,
               children: [
                 _buildStatItem(
                   'Avg. Mileage',
@@ -173,4 +171,3 @@ class StatsCard extends StatelessWidget {
     );
   }
 }
-

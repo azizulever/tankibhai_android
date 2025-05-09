@@ -234,6 +234,35 @@ class MileageGetxController extends GetxController {
     return null;
   }
 
+  // Calculate total fuel used
+  double getTotalFuel() {
+    double total = 0;
+    for (var entry in filteredEntries) {
+      total += entry.fuelAmount;
+    }
+    return total;
+  }
+
+  // Calculate total cost of fuel
+  double getTotalCost() {
+    double total = 0;
+    for (var entry in filteredEntries) {
+      total += entry.fuelCost;
+    }
+    return total;
+  }
+
+  // Calculate total distance traveled
+  double getTotalDistance() {
+    if (filteredEntries.length <= 1) return 0;
+    
+    // Get first and last odometer readings
+    double firstReading = filteredEntries.last.odometer;
+    double lastReading = filteredEntries.first.odometer;
+    
+    return lastReading - firstReading;
+  }
+
   // Returns average mileage for the selected vehicle type
   double get averageMileage {
     return calculateAverageMileage() ?? 0.0;

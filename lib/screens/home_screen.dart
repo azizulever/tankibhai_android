@@ -6,6 +6,8 @@ import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
 import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
 import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
 import 'package:mileage_calculator/widgets/vehicle_type_selector.dart';
+import 'package:mileage_calculator/widgets/tabbed_fuel_history.dart';
+import 'package:mileage_calculator/screens/detailed_history_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -133,50 +135,115 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Divider(color: Colors.grey[300], thickness: 1),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      controller.selectedVehicleType == 'Car'
-                          ? Icons.directions_car
-                          : Icons.two_wheeler,
-                      color: const Color(0xFF0A2463),
+                    Row(
+                      children: [
+                        Icon(
+                          controller.selectedVehicleType == 'Car'
+                              ? Icons.directions_car_rounded
+                              : Icons.two_wheeler_rounded,
+                          color: primaryColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${controller.selectedVehicleType} Fueling History',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${controller.selectedVehicleType} Fueling History',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    // View details button
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DetailedHistoryScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.analytics_rounded, 
+                        size: 20,
+                      ),
+                      label: const Text('Details'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: primaryColor,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12, 
+                          vertical: 6,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child:
-                    controller.filteredEntries.isEmpty
-                        ? EmptyHistoryPlaceholder(
-                          vehicleType: controller.selectedVehicleType,
-                        )
-                        : FuelEntryList(
-                          entries: controller.filteredEntries,
-                          controller: controller,
-                        ),
+                child: controller.filteredEntries.isEmpty
+                    ? EmptyHistoryPlaceholder(
+                        vehicleType: controller.selectedVehicleType,
+                      )
+                    : FuelEntryList(
+                        entries: controller.filteredEntries,
+                        controller: controller,
+                      ),
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed:
-                () => showDialog(
+          bottomNavigationBar: Container(
+            height: 70,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  offset: const Offset(0, -3),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: ElevatedButton.icon(
+                onPressed: () => showDialog(
                   context: context,
                   builder: (context) => AddEntryDialog(controller: controller),
                 ),
-            icon: const Icon(Icons.add),
-            label: Text('Add ${controller.selectedVehicleType} Entry'),
+                icon: const Icon(
+                  Icons.add_circle_outline_rounded,
+                  size: 24,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Add ${controller.selectedVehicleType} Entry',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 2,
+                ),
+              ),
+            ),
           ),
+          // Remove floating action button since we now have a bottom bar
+          floatingActionButton: null,
         );
       },
     );

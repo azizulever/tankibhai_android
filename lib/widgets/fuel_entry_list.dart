@@ -7,22 +7,51 @@ import 'package:mileage_calculator/widgets/edit_entry_dialog.dart';
 class FuelEntryList extends StatelessWidget {
   final List<FuelEntry> entries;
   final MileageGetxController controller;
+  final String listType; // "all", "recent", or "best"
 
   const FuelEntryList({
     required this.entries,
     required this.controller,
+    this.listType = "all",
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: entries.length,
+    // Filter entries based on listType
+    List<FuelEntry> filteredEntries = entries;
+    if (listType == "recent") {
+      // Show only the most recent 5 entries
+      filteredEntries = entries.length > 5 ? entries.sublist(0, 5) : entries;
+    } else if (listType == "best") {
+      // Sort by best mileage and take top 5
+      filteredEntries = List<FuelEntry>.from(entries);
+      filteredEntries.sort((a, b) {
+        final mileageA = controller.calculateMileage(a, null) ?? 0;
+        final mileageB = controller.calculateMileage(b, null) ?? 0;
+        return mileageB.compareTo(mileageA); // Descending order
+      });
+      filteredEntries = filteredEntries.length > 5 ? filteredEntries.sublist(0, 5) : filteredEntries;
+    }
+
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      itemCount: filteredEntries.length,
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.grey[300],
+        height: 1,
+        indent: 70, 
+        endIndent: 16,
+      ),
       itemBuilder: (context, index) {
-        final entry = entries[index];
+        final entry = filteredEntries[index];
+        
+        // Find the original index for correct calculations
+        final originalIndex = entries.indexOf(entry);
+        final isFirst = originalIndex == entries.length - 1;
         final mileage = controller.calculateMileage(
           entry,
-          index < entries.length - 1 ? entries[index + 1] : null,
+          originalIndex < entries.length - 1 ? entries[originalIndex + 1] : null,
         );
 
         // Calculate per liter cost
@@ -30,90 +59,235 @@ class FuelEntryList extends StatelessWidget {
             ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
             : "N/A";
 
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          elevation: 2,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: const Color(0xFF0A2463).withOpacity(0.1),
-              child: Icon(
-                entry.vehicleType == 'Car'
-                    ? Icons.directions_car
-                    : Icons.two_wheeler,
-                color: const Color(0xFF0A2463),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Vehicle icon in circle - modernized
+              Container(
+                margin: const EdgeInsets.only(right: 18.0, top: 2.0),
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF0A2463).withOpacity(0.1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    entry.vehicleType == 'Car'
+                        ? Icons.directions_car_rounded // Rounded icons for modern look
+                        : Icons.motorcycle_rounded,
+                    color: const Color(0xFF0A2463),
+                    size: 26,
+                  ),
+                ),
               ),
-            ),
-            title: Text(
-              'Date: ${DateFormat('MMM dd, yyyy').format(entry.date)}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Odometer: ${entry.odometer.toStringAsFixed(1)} km'),
-                Text('Fuel: ${entry.fuelAmount.toStringAsFixed(2)} liters'),
-                if (mileage != null)
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+              
+              // Middle section with date and odometer/fuel info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date with better spacing
+                    Text(
+                      DateFormat('MMM dd, yyyy').format(entry.date),
+                      style: const TextStyle(
+                        fontSize: 18, 
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.2,
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0A2463).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 10),
+                    
+                    // Odometer reading
+                    Row(
                       children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Mileage: ${mileage.toStringAsFixed(1)} km/l',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF0A2463),
-                              ),
-                            ),
-                          ],
+                        Icon(
+                          Icons.speed_rounded,
+                          size: 16,
+                          color: Colors.grey[600],
                         ),
-                        const SizedBox(height: 2),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Cost: ৳$perLiterCost/l',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF0A2463),
-                              ),
-                            ),
-                          ],
+                        const SizedBox(width: 8),
+                        Text(
+                          'Odometer: ${entry.odometer.toStringAsFixed(1)} km',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () => _showEditEntryDialog(
-                    context,
-                    entry,
-                    index,
-                  ),
+                    const SizedBox(height: 6),
+                    
+                    // Fuel amount
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.local_gas_station_rounded,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Fuel: ${entry.fuelAmount.toStringAsFixed(2)} liters',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _showDeleteConfirmation(context, index),
+              ),
+              
+              // Right section with mileage and fuel price
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // For the first entry, show "Initial Data" instead of mileage
+                    isFirst 
+                      ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10, 
+                            vertical: 4
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber[100],
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 2,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                          child: const Text(
+                            'Initial Data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF0A2463),
+                            ),
+                          ),
+                        )
+                      : mileage != null
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10, 
+                                vertical: 4
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0A2463).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.speed_rounded,
+                                    size: 14,
+                                    color: Color(0xFF0A2463),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${mileage.toStringAsFixed(1)} km/l',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF0A2463),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox(),
+                        
+                    // Fuel price with better styling
+                    if (!isFirst && perLiterCost != "N/A")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, right: 2.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.payments_rounded,
+                              size: 14,
+                              color: Colors.green,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '৳$perLiterCost/l',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                    // Edit and delete buttons with modern look
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        children: [
+                          Material(
+                            color: Colors.blue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () => _showEditEntryDialog(
+                                context,
+                                entry,
+                                originalIndex,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Icon(
+                                  Icons.edit_rounded,
+                                  color: Colors.blue[700],
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Material(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () => _showDeleteConfirmation(context, originalIndex),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Icon(
+                                  Icons.delete_rounded,
+                                  color: Colors.red[700],
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            isThreeLine: true,
+              ),
+            ],
           ),
         );
       },

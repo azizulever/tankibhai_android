@@ -54,9 +54,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
       contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
       title: Row(
@@ -101,9 +99,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
                     width: 2,
                   ),
                 ),
-                floatingLabelStyle: const TextStyle(
-                  color: Color(0xFF0A2463),
-                ),
+                floatingLabelStyle: const TextStyle(color: Color(0xFF0A2463)),
               ),
               readOnly: true,
               onTap: () async {
@@ -135,10 +131,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
               controller: odometerController,
               decoration: InputDecoration(
                 labelText: 'Odometer Reading (km)',
-                prefixIcon: const Icon(
-                  Icons.speed,
-                  color: Color(0xFF0A2463),
-                ),
+                prefixIcon: const Icon(Icons.speed, color: Color(0xFF0A2463)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -149,9 +142,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
                     width: 2,
                   ),
                 ),
-                floatingLabelStyle: const TextStyle(
-                  color: Color(0xFF0A2463),
-                ),
+                floatingLabelStyle: const TextStyle(color: Color(0xFF0A2463)),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -174,9 +165,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
                     width: 2,
                   ),
                 ),
-                floatingLabelStyle: const TextStyle(
-                  color: Color(0xFF0A2463),
-                ),
+                floatingLabelStyle: const TextStyle(color: Color(0xFF0A2463)),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -199,9 +188,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
                     width: 2,
                   ),
                 ),
-                floatingLabelStyle: const TextStyle(
-                  color: Color(0xFF0A2463),
-                ),
+                floatingLabelStyle: const TextStyle(color: Color(0xFF0A2463)),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -214,10 +201,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
           onPressed: () => Navigator.of(context).pop(),
           style: TextButton.styleFrom(
             foregroundColor: Colors.grey[700],
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           child: const Text('CANCEL'),
         ),
@@ -253,10 +237,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
           style: FilledButton.styleFrom(
             backgroundColor: const Color(0xFF0A2463),
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           child: const Text('UPDATE'),
         ),
