@@ -35,7 +35,6 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Divider(color: Colors.grey[300], thickness: 1),
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -125,9 +124,8 @@ class HomePage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Divider(color: Colors.grey[300], thickness: 1),
+                child: Divider(color: Colors.grey[700], thickness: 1),
               ),
-
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                 child: Row(
@@ -162,11 +160,11 @@ class HomePage extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.analytics_rounded, size: 16),
-                      label: const Text('Details'),
+                      label: const Text('View Details'),
                       style: TextButton.styleFrom(
                         foregroundColor: primaryColor,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8, 
+                          horizontal: 8,
                           vertical: 4,
                         ),
                         visualDensity: VisualDensity.compact,
@@ -193,10 +191,12 @@ class HomePage extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 16, right: 16),
             height: 56,
             child: FloatingActionButton.extended(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => AddEntryDialog(controller: controller),
-              ),
+              onPressed:
+                  () => showDialog(
+                    context: context,
+                    builder:
+                        (context) => AddEntryDialog(controller: controller),
+                  ),
               icon: const Icon(
                 Icons.add_circle_outline_rounded,
                 size: 20,

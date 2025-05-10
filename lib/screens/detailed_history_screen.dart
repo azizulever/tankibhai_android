@@ -15,7 +15,7 @@ class DetailedHistoryScreen extends StatefulWidget {
 
 class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
   int _selectedTabIndex = 0;
-  
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MileageGetxController>(
@@ -24,10 +24,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
           appBar: AppBar(
             title: Text(
               '${controller.selectedVehicleType} Fueling Details',
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             ),
             centerTitle: true,
             backgroundColor: primaryColor,
@@ -43,7 +40,11 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
               // Statistics section with gradient background - more compact
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12), // Reduced padding
+                padding: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: 12,
+                ), // Reduced padding
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -67,46 +68,40 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10), // Reduced padding
-                      child: Text(
-                        'Fueling Statistics',
-                        style: TextStyle(
-                          fontSize: 16, // Smaller font
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 18, bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildStatItem(
+                            title: 'Total Fuel',
+                            value:
+                                '${controller.getTotalFuel().toStringAsFixed(2)}L',
+                            icon: Icons.local_gas_station_rounded,
+                          ),
+                          _buildStatItem(
+                            title: 'Total Cost',
+                            value:
+                                '৳${controller.getTotalCost().toStringAsFixed(0)}',
+                            icon: Icons.payments_rounded,
+                          ),
+                          _buildStatItem(
+                            title: 'Total Distance',
+                            value:
+                                '${controller.getTotalDistance().toStringAsFixed(0)}KM',
+                            icon: Icons.map_rounded,
+                          ),
+                        ],
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatItem(
-                          title: 'Total Fuel',
-                          value: '${controller.getTotalFuel().toStringAsFixed(2)}L',
-                          icon: Icons.local_gas_station_rounded,
-                        ),
-                        _buildStatItem(
-                          title: 'Total Cost',
-                          value: '৳${controller.getTotalCost().toStringAsFixed(0)}',
-                          icon: Icons.payments_rounded,
-                        ),
-                        _buildStatItem(
-                          title: 'Total Distance',
-                          value: '${controller.getTotalDistance().toStringAsFixed(0)}KM',
-                          icon: Icons.map_rounded,
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              
+
               const SizedBox(height: 4), // Reduced spacing
-              
               // Replace old TabBar with new CustomTabBar
               CustomTabBar(
                 tabs: const ['All History', 'Recent', 'Best Mileage'],
@@ -117,38 +112,39 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                 },
                 initialIndex: _selectedTabIndex,
               ),
-              
+
               // Update content based on selected tab
               Expanded(
-                child: controller.filteredEntries.isEmpty
-                    ? EmptyHistoryPlaceholder(
-                        vehicleType: controller.selectedVehicleType,
-                      )
-                    : IndexedStack(
-                        index: _selectedTabIndex,
-                        children: [
-                          // All History Tab
-                          FuelEntryList(
-                            entries: controller.filteredEntries,
-                            controller: controller,
-                            listType: "all",
-                          ),
-                              
-                          // Recent Tab
-                          FuelEntryList(
-                            entries: controller.filteredEntries,
-                            controller: controller,
-                            listType: "recent",
-                          ),
-                              
-                          // Best Mileage Tab
-                          FuelEntryList(
-                            entries: controller.filteredEntries,
-                            controller: controller,
-                            listType: "best",
-                          ),
-                        ],
-                      ),
+                child:
+                    controller.filteredEntries.isEmpty
+                        ? EmptyHistoryPlaceholder(
+                          vehicleType: controller.selectedVehicleType,
+                        )
+                        : IndexedStack(
+                          index: _selectedTabIndex,
+                          children: [
+                            // All History Tab
+                            FuelEntryList(
+                              entries: controller.filteredEntries,
+                              controller: controller,
+                              listType: "all",
+                            ),
+
+                            // Recent Tab
+                            FuelEntryList(
+                              entries: controller.filteredEntries,
+                              controller: controller,
+                              listType: "recent",
+                            ),
+
+                            // Best Mileage Tab
+                            FuelEntryList(
+                              entries: controller.filteredEntries,
+                              controller: controller,
+                              listType: "best",
+                            ),
+                          ],
+                        ),
               ),
             ],
           ),
