@@ -282,4 +282,28 @@ class MileageGetxController extends GetxController {
   double get lastFuelPrice {
     return calculateLatestFuelCost() ?? 0.0;
   }
+
+  // Add a new fuel entry
+  void addEntry({
+    required DateTime date,
+    required double odometer,
+    required double fuelAmount,
+    required double fuelCost,
+    required String vehicleType,
+  }) {
+    // Use the existing addFuelEntry method which works correctly
+    addFuelEntry(date, odometer, fuelAmount, vehicleType, fuelCost);
+  }
+  
+  // Update an existing fuel entry
+  void updateEntry({
+    required int index,
+    required DateTime date,
+    required double odometer,
+    required double fuelAmount,
+    required double fuelCost,
+  }) {
+    // Use the existing updateFuelEntry method which works correctly
+    updateFuelEntry(index, date, odometer, fuelAmount, fuelCost);
+  }
 }

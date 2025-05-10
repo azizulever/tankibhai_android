@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
+import 'package:mileage_calculator/screens/detailed_history_screen.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
 import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
 import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
 import 'package:mileage_calculator/widgets/vehicle_type_selector.dart';
-import 'package:mileage_calculator/widgets/tabbed_fuel_history.dart';
-import 'package:mileage_calculator/screens/detailed_history_screen.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -37,22 +36,22 @@ class HomePage extends StatelessWidget {
                 child: Divider(color: Colors.grey[300], thickness: 1),
               ),
 
-              // Add Bike Overview Section with GridView
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 8,
+                  vertical: 4,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
+                      padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text(
                         '${controller.selectedVehicleType} Overview',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: primaryColor,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -68,7 +67,6 @@ class HomePage extends StatelessWidget {
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                           children: [
-                            // Average Mileage Card (Blue)
                             _buildStatCard(
                               context: context,
                               title: 'Avg. Mileage',
@@ -81,8 +79,6 @@ class HomePage extends StatelessWidget {
                               icon: Icons.speed,
                               isBlue: true,
                             ),
-
-                            // Latest Mileage Card (White)
                             _buildStatCard(
                               context: context,
                               title: 'Latest Mileage',
@@ -96,8 +92,6 @@ class HomePage extends StatelessWidget {
                               icon: Icons.speed,
                               isBlue: false,
                             ),
-
-                            // Average Fuel Cost Card (White)
                             _buildStatCard(
                               context: context,
                               title: 'Avg. Fuel Cost',
@@ -110,8 +104,6 @@ class HomePage extends StatelessWidget {
                               icon: Icons.currency_exchange,
                               isBlue: false,
                             ),
-
-                            // Latest Fuel Cost Card (Blue)
                             _buildStatCard(
                               context: context,
                               title: 'Latest Fuel Cost',
@@ -137,7 +129,7 @@ class HomePage extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -160,7 +152,6 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // View details button
                     TextButton.icon(
                       onPressed: () {
                         Navigator.push(
@@ -170,31 +161,30 @@ class HomePage extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: const Icon(
-                        Icons.analytics_rounded, 
-                        size: 20,
-                      ),
+                      icon: const Icon(Icons.analytics_rounded, size: 16),
                       label: const Text('Details'),
                       style: TextButton.styleFrom(
                         foregroundColor: primaryColor,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12, 
-                          vertical: 6,
+                          horizontal: 8, 
+                          vertical: 4,
                         ),
+                        visualDensity: VisualDensity.compact,
                       ),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child: controller.filteredEntries.isEmpty
-                    ? EmptyHistoryPlaceholder(
-                        vehicleType: controller.selectedVehicleType,
-                      )
-                    : FuelEntryList(
-                        entries: controller.filteredEntries,
-                        controller: controller,
-                      ),
+                child:
+                    controller.filteredEntries.isEmpty
+                        ? EmptyHistoryPlaceholder(
+                          vehicleType: controller.selectedVehicleType,
+                        )
+                        : FuelEntryList(
+                          entries: controller.filteredEntries,
+                          controller: controller,
+                        ),
               ),
             ],
           ),
@@ -213,10 +203,12 @@ class HomePage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: ElevatedButton.icon(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (context) => AddEntryDialog(controller: controller),
-                ),
+                onPressed:
+                    () => showDialog(
+                      context: context,
+                      builder:
+                          (context) => AddEntryDialog(controller: controller),
+                    ),
                 icon: const Icon(
                   Icons.add_circle_outline_rounded,
                   size: 24,
@@ -242,14 +234,12 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          // Remove floating action button since we now have a bottom bar
           floatingActionButton: null,
         );
       },
     );
   }
 
-  // Helper method to build stat cards
   Widget _buildStatCard({
     required BuildContext context,
     required String title,

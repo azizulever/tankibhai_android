@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mileage_calculator/utils/theme.dart';
 
 class VehicleTypeSelector extends StatelessWidget {
   final String selectedVehicleType;
@@ -13,19 +14,27 @@ class VehicleTypeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 12), // Reduced from 20
       child: Center(
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey[200]!),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey[200]!,
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildVehicleButton(context, 'Bike', Icons.two_wheeler),
-              _buildVehicleButton(context, 'Car', Icons.directions_car),
+              _buildVehicleButton(context, 'Bike', Icons.two_wheeler_rounded),
+              _buildVehicleButton(context, 'Car', Icons.directions_car_rounded),
             ],
           ),
         ),
@@ -41,34 +50,25 @@ class VehicleTypeSelector extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24), // Reduced horizontal padding
           decoration: BoxDecoration(
-            color: isSelected ? Colors.transparent : Colors.white,
+            color: isSelected ? primaryColor.withOpacity(0.1) : Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow:
-                isSelected
-                    ? [
-                      BoxShadow(
-                        color: Colors.grey[100]!,
-                        // blurRadius: 1,
-                        // offset: const Offset(0, 1),
-                      ),
-                    ]
-                    : null,
+            border: isSelected ? Border.all(color: primaryColor, width: 1) : null,
           ),
           child: Row(
             children: [
               Icon(
                 icon,
-                color: isSelected ? Colors.black : Colors.black,
+                color: isSelected ? primaryColor : Colors.grey[600],
                 size: 20,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6), // Reduced from 8
               Text(
                 type,
                 style: TextStyle(
-                  color: isSelected ? Colors.black : Colors.black,
-                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                  color: isSelected ? primaryColor : Colors.grey[700],
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                   fontSize: 16,
                 ),
               ),

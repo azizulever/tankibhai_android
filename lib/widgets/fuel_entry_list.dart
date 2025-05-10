@@ -35,13 +35,12 @@ class FuelEntryList extends StatelessWidget {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), // Reduced padding
       itemCount: filteredEntries.length,
-      separatorBuilder: (context, index) => Divider(
-        color: Colors.grey[300],
+      separatorBuilder: (context, index) => const Divider(
         height: 1,
-        indent: 70, 
-        endIndent: 16,
+        thickness: 0.5,
+        color: Colors.grey,
       ),
       itemBuilder: (context, index) {
         final entry = filteredEntries[index];
@@ -59,233 +58,171 @@ class FuelEntryList extends StatelessWidget {
             ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
             : "N/A";
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Reduced padding
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Vehicle icon in circle - modernized
+              // Circular icon with blue motorcycle - smaller margins
               Container(
-                margin: const EdgeInsets.only(right: 18.0, top: 2.0),
-                width: 52,
-                height: 52,
+                margin: const EdgeInsets.only(right: 10, top: 4), // Reduced margin
+                width: 42, // Slightly smaller
+                height: 42,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xFF0A2463).withOpacity(0.1),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: Colors.grey[100],
                 ),
                 child: Center(
                   child: Icon(
                     entry.vehicleType == 'Car'
-                        ? Icons.directions_car_rounded // Rounded icons for modern look
-                        : Icons.motorcycle_rounded,
-                    color: const Color(0xFF0A2463),
-                    size: 26,
+                        ? Icons.directions_car_rounded
+                        : Icons.two_wheeler_rounded,
+                    color: Colors.blue, // Use theme color
+                    size: 22, // Slightly smaller
                   ),
                 ),
               ),
               
-              // Middle section with date and odometer/fuel info
+              // Middle section - more compact
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Date with better spacing
+                    // Date - more compact
                     Text(
-                      DateFormat('MMM dd, yyyy').format(entry.date),
+                      DateFormat('MMM d, yyyy').format(entry.date),
                       style: const TextStyle(
-                        fontSize: 18, 
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.2,
+                        fontSize: 16, // Smaller font
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 2), // Reduced spacing
                     
-                    // Odometer reading
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.speed_rounded,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Odometer: ${entry.odometer.toStringAsFixed(1)} km',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
+                    // Odometer reading - more compact
+                    Text(
+                      'Odometer: ${entry.odometer.toStringAsFixed(1)} KM',
+                      style: TextStyle(
+                        fontSize: 13, // Smaller font
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 1), // Reduced spacing
                     
-                    // Fuel amount
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.local_gas_station_rounded,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Fuel: ${entry.fuelAmount.toStringAsFixed(2)} liters',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
+                    // Fuel amount - more compact
+                    Text(
+                      'Fuel: ${entry.fuelAmount.toStringAsFixed(2)} Liters',
+                      style: TextStyle(
+                        fontSize: 13, // Smaller font
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ],
                 ),
               ),
               
-              // Right section with mileage and fuel price
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // For the first entry, show "Initial Data" instead of mileage
-                    isFirst 
-                      ? Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10, 
-                            vertical: 4
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.amber[100],
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 2,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: const Text(
-                            'Initial Data',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF0A2463),
-                            ),
+              // Right side - more compact
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // For the first entry, show "Initial Data" instead of mileage
+                  isFirst 
+                    ? const Text(
+                        'Initial Data',
+                        style: TextStyle(
+                          fontSize: 14, // Smaller font
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      )
+                    : mileage != null
+                      ? Text(
+                          '${mileage.toStringAsFixed(1)} KM/L',
+                          style: const TextStyle(
+                            fontSize: 14, // Smaller font
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue, // Use theme color
                           ),
                         )
-                      : mileage != null
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10, 
-                                vertical: 4
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF0A2463).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.speed_rounded,
-                                    size: 14,
-                                    color: Color(0xFF0A2463),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${mileage.toStringAsFixed(1)} km/l',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF0A2463),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox(),
-                        
-                    // Fuel price with better styling
-                    if (!isFirst && perLiterCost != "N/A")
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, right: 2.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.payments_rounded,
-                              size: 14,
-                              color: Colors.green,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '৳$perLiterCost/l',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      : const SizedBox(),
                       
-                    // Edit and delete buttons with modern look
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Row(
-                        children: [
-                          Material(
-                            color: Colors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(8),
-                              onTap: () => _showEditEntryDialog(
-                                context,
-                                entry,
-                                originalIndex,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Icon(
-                                  Icons.edit_rounded,
-                                  color: Colors.blue[700],
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Material(
-                            color: Colors.red.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(8),
-                              onTap: () => _showDeleteConfirmation(context, originalIndex),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Icon(
-                                  Icons.delete_rounded,
-                                  color: Colors.red[700],
-                                  size: 18,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                  // Fuel price - more compact
+                  if (!isFirst && perLiterCost != "N/A")
+                    Text(
+                      '৳$perLiterCost/L',
+                      style: TextStyle(
+                        fontSize: 13, // Smaller font
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green[600],
                       ),
                     ),
-                  ],
-                ),
+                    
+                  // Edit and delete buttons - more compact
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0), // Reduced padding
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 6), // Reduced margin
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.1), // Use theme color
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: Colors.blue.withOpacity(0.3), // Use theme color
+                              width: 1,
+                            ),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(6),
+                            onTap: () => _showEditEntryDialog(
+                              context,
+                              entry,
+                              originalIndex,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6, // Reduced padding
+                                vertical: 3, // Reduced padding
+                              ),
+                              child: const Icon(
+                                Icons.edit_rounded,
+                                color: Colors.blue, // Use theme color
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(6),
+                            onTap: () => _showDeleteConfirmation(context, originalIndex),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6, // Reduced padding
+                                vertical: 3, // Reduced padding
+                              ),
+                              child: Icon(
+                                Icons.delete_rounded,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -309,55 +246,83 @@ class FuelEntryList extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: Row(
-            children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.red),
-              const SizedBox(width: 12),
-              const Text(
-                'Confirm Deletion',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          content: const Text(
-            'Are you sure you want to delete this entry? This action cannot be undone.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey[700],
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title with red warning icon
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.warning_rounded,
+                      color: Colors.red,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Confirm Deletion',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              child: const Text('CANCEL'),
-            ),
-            FilledButton(
-              onPressed: () {
-                controller.deleteEntry(index);
-                Navigator.of(context).pop();
-              },
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                const SizedBox(height: 16),
+                // Simple message text in gray
+                const Text(
+                  'Are you sure you want to delete this entry? This action cannot be undone.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              child: const Text('DELETE'),
+                const SizedBox(height: 24),
+                // Button row with blue cancel and red delete
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                      ),
+                      child: const Text(
+                        'CANCEL',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () {
+                        controller.deleteEntry(index);
+                        Navigator.of(context).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                      child: const Text(
+                        'DELETE',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-          actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          actionsAlignment: MainAxisAlignment.spaceBetween,
+          ),
         );
       },
     );

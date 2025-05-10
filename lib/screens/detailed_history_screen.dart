@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
 import 'package:mileage_calculator/utils/theme.dart';
-import 'package:mileage_calculator/widgets/tabbed_fuel_history.dart';
+import 'package:mileage_calculator/widgets/custom_tab_bar.dart';
+import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
+import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
 
-class DetailedHistoryScreen extends StatelessWidget {
+class DetailedHistoryScreen extends StatefulWidget {
   const DetailedHistoryScreen({Key? key}) : super(key: key);
 
+  @override
+  State<DetailedHistoryScreen> createState() => _DetailedHistoryScreenState();
+}
+
+class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
+  int _selectedTabIndex = 0;
+  
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MileageGetxController>(
@@ -23,7 +32,7 @@ class DetailedHistoryScreen extends StatelessWidget {
             centerTitle: true,
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
-            elevation: 2,
+            elevation: 0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               onPressed: () => Navigator.of(context).pop(),
@@ -31,47 +40,63 @@ class DetailedHistoryScreen extends StatelessWidget {
           ),
           body: Column(
             children: [
-              // Statistics section
+              // Statistics section with gradient background - more compact
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12), // Reduced padding
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.05),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.grey.shade300,
-                      width: 1,
-                    ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      primaryColor,
+                      primaryColor.withOpacity(0.9),
+                      primaryColor.withOpacity(0.6),
+                    ],
                   ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16), // Reduced radius
+                    bottomRight: Radius.circular(16),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryColor.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 6, // Reduced blur
+                      offset: const Offset(0, 2), // Reduced offset
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Fueling Statistics',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor,
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 10), // Reduced padding
+                      child: Text(
+                        'Fueling Statistics',
+                        style: TextStyle(
+                          fontSize: 16, // Smaller font
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatItem(
                           title: 'Total Fuel',
-                          value: '${controller.getTotalFuel().toStringAsFixed(2)} L',
+                          value: '${controller.getTotalFuel().toStringAsFixed(2)}L',
                           icon: Icons.local_gas_station_rounded,
                         ),
                         _buildStatItem(
                           title: 'Total Cost',
-                          value: '৳${controller.getTotalCost().toStringAsFixed(2)}',
+                          value: '৳${controller.getTotalCost().toStringAsFixed(0)}',
                           icon: Icons.payments_rounded,
                         ),
                         _buildStatItem(
                           title: 'Total Distance',
-                          value: '${controller.getTotalDistance().toStringAsFixed(1)} km',
+                          value: '${controller.getTotalDistance().toStringAsFixed(0)}KM',
                           icon: Icons.map_rounded,
                         ),
                       ],
@@ -80,44 +105,32 @@ class DetailedHistoryScreen extends StatelessWidget {
                 ),
               ),
               
-              // Tabbed history view
+              const SizedBox(height: 4), // Reduced spacing
+              
+              // Custom tab bar - reduced margins
+              CustomTabBar(
+                tabs: const ['All History', 'Recent', 'Best Mileage'],
+                onTabChanged: (index) {
+                  setState(() {
+                    _selectedTabIndex = index;
+                  });
+                },
+              ),
+              
+              // Content based on selected tab
               Expanded(
                 child: controller.filteredEntries.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              controller.selectedVehicleType == 'Car'
-                                  ? Icons.directions_car_rounded
-                                  : Icons.motorcycle_rounded,
-                              size: 80,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No ${controller.selectedVehicleType} Records Found',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Add some entries to see detailed statistics',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
+                    ? EmptyHistoryPlaceholder(
+                        vehicleType: controller.selectedVehicleType,
                       )
-                    : TabbedFuelHistory(
+                    : FuelEntryList(
                         entries: controller.filteredEntries,
                         controller: controller,
-                        vehicleType: controller.selectedVehicleType,
+                        listType: _selectedTabIndex == 0 
+                            ? "all" 
+                            : _selectedTabIndex == 1 
+                                ? "recent" 
+                                : "best",
                       ),
               ),
             ],
@@ -135,32 +148,32 @@ class DetailedHistoryScreen extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10), // Reduced padding
           decoration: BoxDecoration(
-            color: primaryColor.withOpacity(0.1),
-            shape: BoxShape.circle,
+            color: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(10), // Reduced radius
           ),
           child: Icon(
             icon,
-            color: primaryColor,
-            size: 24,
+            color: Colors.white,
+            size: 22, // Smaller icon
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6), // Reduced spacing
         Text(
           value,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 14, // Smaller font
             fontWeight: FontWeight.bold,
-            color: primaryColor,
+            color: Colors.white,
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2), // Reduced spacing
         Text(
           title,
           style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[700],
+            fontSize: 10, // Smaller font
+            color: Colors.white.withOpacity(0.8),
           ),
         ),
       ],
