@@ -188,53 +188,36 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          bottomNavigationBar: Container(
-            height: 70,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, -3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: ElevatedButton.icon(
-                onPressed:
-                    () => showDialog(
-                      context: context,
-                      builder:
-                          (context) => AddEntryDialog(controller: controller),
-                    ),
-                icon: const Icon(
-                  Icons.add_circle_outline_rounded,
-                  size: 24,
+          bottomNavigationBar: null,
+          floatingActionButton: Container(
+            margin: const EdgeInsets.only(bottom: 16, right: 16),
+            height: 56,
+            child: FloatingActionButton.extended(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AddEntryDialog(controller: controller),
+              ),
+              icon: const Icon(
+                Icons.add_circle_outline_rounded,
+                size: 20,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Add ${controller.selectedVehicleType} Entry',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),
-                label: Text(
-                  'Add ${controller.selectedVehicleType} Entry',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  elevation: 2,
-                ),
+              ),
+              backgroundColor: primaryColor,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
           ),
-          floatingActionButton: null,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
     );

@@ -243,6 +243,9 @@ class FuelEntryList extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, int index) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -250,75 +253,133 @@ class FuelEntryList extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: screenSize.width > 600 ? screenSize.width * 0.15 : 24,
+            vertical: screenSize.height > 800 ? 40 : 24,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 400,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title with red warning icon
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.warning_rounded,
-                      color: Colors.red,
-                      size: 24,
+                // Warning header with gradient for more visual appeal
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.red,
+                        Color(0xFFE53935),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Confirm Deletion',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x40E53935),
+                        offset: Offset(0, 2),
+                        blurRadius: 4,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                // Simple message text in gray
-                const Text(
-                  'Are you sure you want to delete this entry? This action cannot be undone.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+                    ],
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: isSmallScreen ? 12 : 16,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.white,
+                        size: isSmallScreen ? 20 : 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Confirm Deletion',
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 16 : 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                // Button row with blue cancel and red delete
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
-                      ),
-                      child: const Text(
-                        'CANCEL',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                
+                // Warning message with responsive padding
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    isSmallScreen ? 16 : 20,
+                    20,
+                    isSmallScreen ? 12 : 16,
+                  ),
+                  child: Text(
+                    'Are you sure you want to delete this entry? This action cannot be undone.',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 14 : 16,
+                      height: 1.4,
+                      color: Colors.black87,
                     ),
-                    const SizedBox(width: 16),
-                    TextButton(
-                      onPressed: () {
-                        controller.deleteEntry(index);
-                        Navigator.of(context).pop();
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.red,
-                      ),
-                      child: const Text(
-                        'DELETE',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                  ),
+                ),
+                
+                // Action buttons with responsive sizing
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    0,
+                    16,
+                    isSmallScreen ? 12 : 16,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.grey[700],
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSmallScreen ? 12 : 16,
+                            vertical: isSmallScreen ? 8 : 12,
+                          ),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: isSmallScreen ? 13 : 14,
+                          ),
                         ),
+                        child: const Text('CANCEL'),
                       ),
-                    ),
-                  ],
+                      SizedBox(width: isSmallScreen ? 4 : 8),
+                      FilledButton(
+                        onPressed: () {
+                          controller.deleteEntry(index);
+                          Navigator.of(context).pop();
+                        },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: isSmallScreen ? 12 : 16,
+                            vertical: isSmallScreen ? 8 : 12,
+                          ),
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: isSmallScreen ? 13 : 14,
+                          ),
+                        ),
+                        child: const Text('DELETE'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

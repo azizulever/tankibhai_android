@@ -107,7 +107,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
               
               const SizedBox(height: 4), // Reduced spacing
               
-              // Custom tab bar - reduced margins
+              // Replace old TabBar with new CustomTabBar
               CustomTabBar(
                 tabs: const ['All History', 'Recent', 'Best Mileage'],
                 onTabChanged: (index) {
@@ -115,22 +115,39 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                     _selectedTabIndex = index;
                   });
                 },
+                initialIndex: _selectedTabIndex,
               ),
               
-              // Content based on selected tab
+              // Update content based on selected tab
               Expanded(
                 child: controller.filteredEntries.isEmpty
                     ? EmptyHistoryPlaceholder(
                         vehicleType: controller.selectedVehicleType,
                       )
-                    : FuelEntryList(
-                        entries: controller.filteredEntries,
-                        controller: controller,
-                        listType: _selectedTabIndex == 0 
-                            ? "all" 
-                            : _selectedTabIndex == 1 
-                                ? "recent" 
-                                : "best",
+                    : IndexedStack(
+                        index: _selectedTabIndex,
+                        children: [
+                          // All History Tab
+                          FuelEntryList(
+                            entries: controller.filteredEntries,
+                            controller: controller,
+                            listType: "all",
+                          ),
+                              
+                          // Recent Tab
+                          FuelEntryList(
+                            entries: controller.filteredEntries,
+                            controller: controller,
+                            listType: "recent",
+                          ),
+                              
+                          // Best Mileage Tab
+                          FuelEntryList(
+                            entries: controller.filteredEntries,
+                            controller: controller,
+                            listType: "best",
+                          ),
+                        ],
                       ),
               ),
             ],
