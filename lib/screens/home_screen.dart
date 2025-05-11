@@ -124,7 +124,7 @@ class HomePage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Divider(color: Colors.grey[700], thickness: 1),
+                child: Divider(color: Colors.grey[300], thickness: 1),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -141,7 +141,7 @@ class HomePage extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '${controller.selectedVehicleType} Fueling History',
+                          'Fueling History',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class HomePage extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.analytics_rounded, size: 16),
-                      label: const Text('View Details'),
+                      label: const Text('See more'),
                       style: TextButton.styleFrom(
                         foregroundColor: primaryColor,
                         padding: const EdgeInsets.symmetric(

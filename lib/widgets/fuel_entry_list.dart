@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
 import 'package:mileage_calculator/models/fuel_entry.dart';
-import 'package:intl/intl.dart';
+import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/edit_entry_dialog.dart';
 
 class FuelEntryList extends StatelessWidget {
@@ -31,41 +32,54 @@ class FuelEntryList extends StatelessWidget {
         final mileageB = controller.calculateMileage(b, null) ?? 0;
         return mileageB.compareTo(mileageA); // Descending order
       });
-      filteredEntries = filteredEntries.length > 5 ? filteredEntries.sublist(0, 5) : filteredEntries;
+      filteredEntries =
+          filteredEntries.length > 5
+              ? filteredEntries.sublist(0, 5)
+              : filteredEntries;
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), // Reduced padding
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ), // Reduced padding
       itemCount: filteredEntries.length,
-      separatorBuilder: (context, index) => const Divider(
-        height: 1,
-        thickness: 0.5,
-        color: Colors.grey,
-      ),
+      separatorBuilder:
+          (context, index) =>
+              const Divider(height: 1, thickness: 0.5, color: Colors.grey),
       itemBuilder: (context, index) {
         final entry = filteredEntries[index];
-        
+
         // Find the original index for correct calculations
         final originalIndex = entries.indexOf(entry);
         final isFirst = originalIndex == entries.length - 1;
         final mileage = controller.calculateMileage(
           entry,
-          originalIndex < entries.length - 1 ? entries[originalIndex + 1] : null,
+          originalIndex < entries.length - 1
+              ? entries[originalIndex + 1]
+              : null,
         );
 
         // Calculate per liter cost
-        final perLiterCost = entry.fuelAmount > 0
-            ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
-            : "N/A";
+        final perLiterCost =
+            entry.fuelAmount > 0
+                ? (entry.fuelCost / entry.fuelAmount).toStringAsFixed(2)
+                : "N/A";
 
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6), // Reduced padding
+          padding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 6,
+          ), // Reduced padding
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Circular icon with blue motorcycle - smaller margins
               Container(
-                margin: const EdgeInsets.only(right: 10, top: 4), // Reduced margin
+                margin: const EdgeInsets.only(
+                  right: 10,
+                  top: 4,
+                ), // Reduced margin
                 width: 42, // Slightly smaller
                 height: 42,
                 decoration: BoxDecoration(
@@ -77,12 +91,12 @@ class FuelEntryList extends StatelessWidget {
                     entry.vehicleType == 'Car'
                         ? Icons.directions_car_rounded
                         : Icons.two_wheeler_rounded,
-                    color: Colors.blue, // Use theme color
+                    color: primaryColor, // Use theme color
                     size: 22, // Slightly smaller
                   ),
                 ),
               ),
-              
+
               // Middle section - more compact
               Expanded(
                 child: Column(
@@ -98,7 +112,6 @@ class FuelEntryList extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2), // Reduced spacing
-                    
                     // Odometer reading - more compact
                     Text(
                       'Odometer: ${entry.odometer.toStringAsFixed(1)} KM',
@@ -109,7 +122,6 @@ class FuelEntryList extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 1), // Reduced spacing
-                    
                     // Fuel amount - more compact
                     Text(
                       'Fuel: ${entry.fuelAmount.toStringAsFixed(2)} Liters',
@@ -122,14 +134,14 @@ class FuelEntryList extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Right side - more compact
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   // For the first entry, show "Initial Data" instead of mileage
-                  isFirst 
-                    ? const Text(
+                  isFirst
+                      ? const Text(
                         'Initial Data',
                         style: TextStyle(
                           fontSize: 14, // Smaller font
@@ -137,17 +149,17 @@ class FuelEntryList extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       )
-                    : mileage != null
+                      : mileage != null
                       ? Text(
-                          '${mileage.toStringAsFixed(1)} KM/L',
-                          style: const TextStyle(
-                            fontSize: 14, // Smaller font
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue, // Use theme color
-                          ),
-                        )
+                        '${mileage.toStringAsFixed(1)} KM/L',
+                        style: const TextStyle(
+                          fontSize: 14, // Smaller font
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor, // Use theme color
+                        ),
+                      )
                       : const SizedBox(),
-                      
+
                   // Fuel price - more compact
                   if (!isFirst && perLiterCost != "N/A")
                     Text(
@@ -158,36 +170,43 @@ class FuelEntryList extends StatelessWidget {
                         color: Colors.green[600],
                       ),
                     ),
-                    
+
                   // Edit and delete buttons - more compact
                   Padding(
                     padding: const EdgeInsets.only(top: 2.0), // Reduced padding
                     child: Row(
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(right: 6), // Reduced margin
+                          margin: const EdgeInsets.only(
+                            right: 6,
+                          ), // Reduced margin
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1), // Use theme color
+                            color: Colors.blue.withOpacity(
+                              0.1,
+                            ), // Use theme color
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
-                              color: Colors.blue.withOpacity(0.3), // Use theme color
+                              color: Colors.blue.withOpacity(
+                                0.3,
+                              ), // Use theme color
                               width: 1,
                             ),
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(6),
-                            onTap: () => _showEditEntryDialog(
-                              context,
-                              entry,
-                              originalIndex,
-                            ),
+                            onTap:
+                                () => _showEditEntryDialog(
+                                  context,
+                                  entry,
+                                  originalIndex,
+                                ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 6, // Reduced padding
                                 vertical: 3, // Reduced padding
                               ),
                               child: const Icon(
-                                Icons.edit_rounded,
+                                Icons.edit_outlined,
                                 color: Colors.blue, // Use theme color
                                 size: 18,
                               ),
@@ -205,14 +224,18 @@ class FuelEntryList extends StatelessWidget {
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(6),
-                            onTap: () => _showDeleteConfirmation(context, originalIndex),
+                            onTap:
+                                () => _showDeleteConfirmation(
+                                  context,
+                                  originalIndex,
+                                ),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 6, // Reduced padding
                                 vertical: 3, // Reduced padding
                               ),
                               child: Icon(
-                                Icons.delete_rounded,
+                                Icons.delete_outline,
                                 color: Colors.red,
                                 size: 18,
                               ),
@@ -234,18 +257,19 @@ class FuelEntryList extends StatelessWidget {
   void _showEditEntryDialog(BuildContext context, FuelEntry entry, int index) {
     showDialog(
       context: context,
-      builder: (context) => EditEntryDialog(
-        controller: controller,
-        entry: entry,
-        index: index,
-      ),
+      builder:
+          (context) => EditEntryDialog(
+            controller: controller,
+            entry: entry,
+            index: index,
+          ),
     );
   }
 
   void _showDeleteConfirmation(BuildContext context, int index) {
     final screenSize = MediaQuery.of(context).size;
     final isSmallScreen = screenSize.width < 360;
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -258,9 +282,7 @@ class FuelEntryList extends StatelessWidget {
             vertical: screenSize.height > 800 ? 40 : 24,
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 400,
-            ),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,10 +291,7 @@ class FuelEntryList extends StatelessWidget {
                 Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.red,
-                        Color(0xFFE53935),
-                      ],
+                      colors: [Colors.red, Color(0xFFE53935)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -311,7 +330,7 @@ class FuelEntryList extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Warning message with responsive padding
                 Padding(
                   padding: EdgeInsets.fromLTRB(
@@ -329,7 +348,7 @@ class FuelEntryList extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Action buttons with responsive sizing
                 Padding(
                   padding: EdgeInsets.fromLTRB(
