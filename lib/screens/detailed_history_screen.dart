@@ -37,14 +37,10 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
           ),
           body: Column(
             children: [
-              // Statistics section with gradient background - more compact
+              // Statistics section with gradient background
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: 12,
-                ), // Reduced padding
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -56,15 +52,15 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                     ],
                   ),
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(16), // Reduced radius
+                    bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
                   ),
                   boxShadow: [
                     BoxShadow(
                       color: primaryColor.withOpacity(0.3),
                       spreadRadius: 1,
-                      blurRadius: 6, // Reduced blur
-                      offset: const Offset(0, 2), // Reduced offset
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -101,8 +97,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                 ),
               ),
 
-              const SizedBox(height: 4), // Reduced spacing
-              // Replace old TabBar with new CustomTabBar
+              const SizedBox(height: 4),
               CustomTabBar(
                 tabs: const ['All History', 'Recent', 'Best Mileage'],
                 onTabChanged: (index) {
@@ -113,7 +108,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                 initialIndex: _selectedTabIndex,
               ),
 
-              // Update content based on selected tab
+              // Tab content
               Expanded(
                 child:
                     controller.filteredEntries.isEmpty
@@ -161,31 +156,31 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(10), // Reduced padding
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(10), // Reduced radius
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
             icon,
             color: Colors.white,
-            size: 22, // Smaller icon
+            size: 22,
           ),
         ),
-        const SizedBox(height: 6), // Reduced spacing
+        const SizedBox(height: 6),
         Text(
           value,
           style: const TextStyle(
-            fontSize: 14, // Smaller font
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        const SizedBox(height: 2), // Reduced spacing
+        const SizedBox(height: 2),
         Text(
           title,
           style: TextStyle(
-            fontSize: 10, // Smaller font
+            fontSize: 10,
             color: Colors.white.withOpacity(0.8),
           ),
         ),

@@ -20,21 +20,39 @@ class EditEntryDialog extends StatefulWidget {
   State<EditEntryDialog> createState() => _EditEntryDialogState();
 }
 
-class _EditEntryDialogState extends State<EditEntryDialog> {
+class _EditEntryDialogState extends State<EditEntryDialog> with SingleTickerProviderStateMixin {
   late final TextEditingController dateController;
   late final TextEditingController odometerController;
   late final TextEditingController fuelAmountController;
   late final TextEditingController fuelCostController;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     // Initialize with current entry values
-    dateController = TextEditingController(text: DateFormat('yyyy-MM-dd').format(widget.entry.date));
-    odometerController = TextEditingController(text: widget.entry.odometer.toString());
-    fuelAmountController = TextEditingController(text: widget.entry.fuelAmount.toString());
-    fuelCostController = TextEditingController(text: widget.entry.fuelCost.toString());
+    dateController = TextEditingController(
+        text: DateFormat('yyyy-MM-dd').format(widget.entry.date));
+    odometerController =
+        TextEditingController(text: widget.entry.odometer.toString());
+    fuelAmountController =
+        TextEditingController(text: widget.entry.fuelAmount.toString());
+    fuelCostController =
+        TextEditingController(text: widget.entry.fuelCost.toString());
+        
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    
+    _animationController.forward();
   }
 
   @override
@@ -43,6 +61,7 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
     odometerController.dispose();
     fuelAmountController.dispose();
     fuelCostController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -51,13 +70,17 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
       context: context,
       initialDate: widget.entry.date,
       firstDate: DateTime(2020),
-      lastDate: DateTime.now().add(const Duration(days: 3650)), // Allow future dates
+      lastDate: DateTime.now(),
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary: primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
             ),
+            dialogBackgroundColor: Colors.white,
           ),
           child: child!,
         );
@@ -72,302 +95,331 @@ class _EditEntryDialogState extends State<EditEntryDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final isSmallScreen = screenSize.width < 360;
-    
+    // Similar structure to AddEntryDialog, with "Edit" title and "UPDATE" button
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
-      insetPadding: EdgeInsets.symmetric(
-        horizontal: screenSize.width > 600 ? screenSize.width * 0.15 : 20,
-        vertical: screenSize.height > 800 ? 40 : 24,
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 450,
-          maxHeight: screenSize.height * 0.85,
-        ),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with gradient for more visual appeal
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        primaryColor,
-                        primaryColor.withOpacity(0.9),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primaryColor.withOpacity(0.25),
-                        offset: const Offset(0, 2),
-                        blurRadius: 4,
-                      ),
-                    ],
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
+            // Dialog content
+            Container(
+              margin: const EdgeInsets.only(top: 30),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: isSmallScreen ? 12 : 16,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Row(
-                          children: [
-                            Icon(
-                              widget.entry.vehicleType == 'Car'
-                                  ? Icons.directions_car_rounded
-                                  : Icons.two_wheeler_rounded,
-                              color: Colors.white,
-                              size: isSmallScreen ? 20 : 24,
+                ],
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title bar
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(24, 44, 24, 16),
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Edit ${widget.entry.vehicleType} Fueling Record',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black87,
                             ),
-                            const SizedBox(width: 12),
-                            Flexible(
-                              child: Text(
-                                'Edit ${widget.entry.vehicleType} Fueling Record',
-                                style: TextStyle(
-                                  fontSize: isSmallScreen ? 16 : 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Update the details for this fuel entry',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    // Form (same field structure as AddEntryDialog)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Date field
+                            _buildInputField(
+                              label: 'Date',
+                              controller: dateController,
+                              readOnly: true,
+                              onTap: () => _selectDate(context),
+                              suffixIcon: const Icon(
+                                Icons.calendar_today_rounded,
+                                color: primaryColor,
+                                size: 20,
                               ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select a date';
+                                }
+                                return null;
+                              },
+                            ),
+                            
+                            // Odometer field
+                            _buildInputField(
+                              label: 'Odometer Reading (km)',
+                              controller: odometerController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter odometer reading';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                return null;
+                              },
+                            ),
+                            
+                            // Fuel amount field
+                            _buildInputField(
+                              label: 'Fuel Added (liters)',
+                              controller: fuelAmountController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter fuel amount';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                return null;
+                              },
+                            ),
+                            
+                            // Fuel cost field
+                            _buildInputField(
+                              label: 'Fuel Cost (total)',
+                              controller: fuelCostController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter fuel cost';
+                                }
+                                if (double.tryParse(value) == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                return null;
+                              },
+                            ),
+                            
+                            const SizedBox(height: 24),
+                            
+                            // Action buttons
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Cancel button
+                                TextButton(
+                                  onPressed: () {
+                                    _animationController.reverse().then((_) {
+                                      Navigator.of(context).pop();
+                                    });
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.grey[700],
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, 
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'CANCEL',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                
+                                // Update button
+                                ElevatedButton(
+                                  onPressed: _submitForm,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24, 
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'UPDATE',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(16),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: Icon(
-                              Icons.close_rounded,
-                              color: Colors.white,
-                              size: isSmallScreen ? 18 : 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                
-                SizedBox(height: isSmallScreen ? 12 : 16),
-                
-                // Input fields with responsive sizing
-                _buildInputField(
-                  label: 'Date',
-                  hint: 'YYYY-MM-DD',
-                  controller: dateController,
-                  readOnly: true,
-                  isSmallScreen: isSmallScreen,
-                  onTap: () => _selectDate(context),
-                  suffixIcon: const Icon(Icons.calendar_today_rounded, color: primaryColor, size: 20),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a date';
-                    }
-                    return null;
-                  },
-                ),
-                
-                _buildInputField(
-                  label: 'Odometer Reading',
-                  hint: 'Enter in kilometers',
-                  controller: odometerController,
-                  isSmallScreen: isSmallScreen,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter odometer reading';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Please enter a valid number';
-                    }
-                    return null;
-                  },
-                ),
-                
-                _buildInputField(
-                  label: 'Fuel Added',
-                  hint: 'Enter in liters',
-                  controller: fuelAmountController,
-                  isSmallScreen: isSmallScreen,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter fuel amount';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Please enter a valid number';
-                    }
-                    return null;
-                  },
-                ),
-                
-                _buildInputField(
-                  label: 'Total Fuel Cost',
-                  hint: 'Enter in taka',
-                  controller: fuelCostController,
-                  isSmallScreen: isSmallScreen,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter fuel cost';
-                    }
-                    if (double.tryParse(value) == null) {
-                      return 'Please enter a valid number';
-                    }
-                    return null;
-                  },
-                ),
-                
-                // Action buttons with responsive sizing
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    isSmallScreen ? 12 : 20,
-                    16,
-                    isSmallScreen ? 12 : 16,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.grey[700],
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isSmallScreen ? 12 : 16,
-                            vertical: isSmallScreen ? 8 : 12,
-                          ),
-                        ),
-                        child: const Text('CANCEL'),
-                      ),
-                      SizedBox(width: isSmallScreen ? 4 : 8),
-                      FilledButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            widget.controller.updateFuelEntry(
-                              widget.index,
-                              DateTime.parse(dateController.text),
-                              double.parse(odometerController.text),
-                              double.parse(fuelAmountController.text),
-                              double.parse(fuelCostController.text),
-                            );
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        style: FilledButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isSmallScreen ? 12 : 16,
-                            vertical: isSmallScreen ? 8 : 12,
-                          ),
-                        ),
-                        child: const Text('UPDATE'),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            
+            // Icon at the top
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: CircleAvatar(
+                  backgroundColor: primaryColor,
+                  radius: 30,
+                  child: Icon(
+                    widget.entry.vehicleType == 'Car'
+                        ? Icons.directions_car_rounded
+                        : Icons.two_wheeler_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+            ),
+            
+            // Close button
+            Positioned(
+              top: 40,
+              right: 16,
+              child: GestureDetector(
+                onTap: () {
+                  _animationController.reverse().then((_) {
+                    Navigator.of(context).pop();
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.close_rounded,
+                    color: Colors.grey[700],
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-  
+
+  // Same helper method as in AddEntryDialog
   Widget _buildInputField({
     required String label,
-    required String hint,
     required TextEditingController controller,
-    required bool isSmallScreen,
     TextInputType? keyboardType,
     bool readOnly = false,
     VoidCallback? onTap,
     Widget? suffixIcon,
     String? Function(String?)? validator,
   }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: isSmallScreen ? 6 : 8,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: isSmallScreen ? 12 : 14,
-              fontWeight: FontWeight.w500,
-              color: primaryColor,
-            ),
+    // ...same implementation as in AddEntryDialog...
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: primaryColor,
           ),
-          SizedBox(height: isSmallScreen ? 4 : 8),
-          TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            readOnly: readOnly,
-            onTap: onTap,
-            style: TextStyle(fontSize: isSmallScreen ? 14 : 16),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                color: Colors.grey[400],
-                fontSize: isSmallScreen ? 13 : 15,
-              ),
-              filled: true,
-              fillColor: Colors.grey[50],
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: isSmallScreen ? 12 : 14,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: primaryColor, width: 1.5),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.red, width: 1),
-              ),
-              errorStyle: TextStyle(
-                fontSize: isSmallScreen ? 10 : 12,
-              ),
-              suffixIcon: suffixIcon,
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          readOnly: readOnly,
+          onTap: onTap,
+          style: const TextStyle(fontSize: 16),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[50],
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
             ),
-            validator: validator,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: primaryColor, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            suffixIcon: suffixIcon,
           ),
-        ],
-      ),
+          validator: validator,
+        ),
+      ],
     );
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      try {
+        widget.controller.updateFuelEntry(
+          widget.index,
+          DateTime.parse(dateController.text),
+          double.parse(odometerController.text),
+          double.parse(fuelAmountController.text),
+          double.parse(fuelCostController.text),
+        );
+        
+        _animationController.reverse().then((_) {
+          Navigator.of(context).pop();
+        });
+      } catch (e) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

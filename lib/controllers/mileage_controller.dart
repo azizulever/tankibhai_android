@@ -234,7 +234,6 @@ class MileageGetxController extends GetxController {
     return null;
   }
 
-  // Calculate total fuel used
   double getTotalFuel() {
     double total = 0;
     for (var entry in filteredEntries) {
@@ -243,7 +242,6 @@ class MileageGetxController extends GetxController {
     return total;
   }
 
-  // Calculate total cost of fuel
   double getTotalCost() {
     double total = 0;
     for (var entry in filteredEntries) {
@@ -252,58 +250,28 @@ class MileageGetxController extends GetxController {
     return total;
   }
 
-  // Calculate total distance traveled
   double getTotalDistance() {
     if (filteredEntries.length <= 1) return 0;
     
-    // Get first and last odometer readings
     double firstReading = filteredEntries.last.odometer;
     double lastReading = filteredEntries.first.odometer;
     
     return lastReading - firstReading;
   }
 
-  // Returns average mileage for the selected vehicle type
   double get averageMileage {
     return calculateAverageMileage() ?? 0.0;
   }
   
-  // Returns the most recent mileage calculation
   double get lastMileage {
     return calculateLatestMileage() ?? 0.0;
   }
   
-  // Returns average fuel price for the selected vehicle type
   double get averageFuelPrice {
     return calculateAverageFuelCost() ?? 0.0;
   }
   
-  // Returns the most recent fuel price
   double get lastFuelPrice {
     return calculateLatestFuelCost() ?? 0.0;
-  }
-
-  // Add a new fuel entry
-  void addEntry({
-    required DateTime date,
-    required double odometer,
-    required double fuelAmount,
-    required double fuelCost,
-    required String vehicleType,
-  }) {
-    // Use the existing addFuelEntry method which works correctly
-    addFuelEntry(date, odometer, fuelAmount, vehicleType, fuelCost);
-  }
-  
-  // Update an existing fuel entry
-  void updateEntry({
-    required int index,
-    required DateTime date,
-    required double odometer,
-    required double fuelAmount,
-    required double fuelCost,
-  }) {
-    // Use the existing updateFuelEntry method which works correctly
-    updateFuelEntry(index, date, odometer, fuelAmount, fuelCost);
   }
 }
