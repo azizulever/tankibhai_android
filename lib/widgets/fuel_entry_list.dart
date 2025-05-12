@@ -30,22 +30,26 @@ class FuelEntryList extends StatelessWidget {
         return mileageB.compareTo(mileageA);
       });
       filteredEntries =
-          filteredEntries.length > 5 ? filteredEntries.sublist(0, 5) : filteredEntries;
+          filteredEntries.length > 5
+              ? filteredEntries.sublist(0, 5)
+              : filteredEntries;
     }
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       itemCount: filteredEntries.length,
-      separatorBuilder: (context, index) => 
-          const Divider(height: 1, thickness: 0.5, color: Colors.grey),
+      separatorBuilder:
+          (context, index) =>
+              Divider(height: 1, thickness: 1, color: Colors.grey[300]!),
       itemBuilder: (context, index) {
         final entry = filteredEntries[index];
-
         final originalIndex = entries.indexOf(entry);
         final isFirst = originalIndex == entries.length - 1;
         final mileage = controller.calculateMileage(
           entry,
-          originalIndex < entries.length - 1 ? entries[originalIndex + 1] : null,
+          originalIndex < entries.length - 1
+              ? entries[originalIndex + 1]
+              : null,
         );
 
         final perLiterCost =
@@ -54,6 +58,7 @@ class FuelEntryList extends StatelessWidget {
                 : "N/A";
 
         return Container(
+          color: backgroundColor,
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +165,12 @@ class FuelEntryList extends StatelessWidget {
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(6),
-                            onTap: () => _showEditEntryDialog(context, entry, originalIndex),
+                            onTap:
+                                () => _showEditEntryDialog(
+                                  context,
+                                  entry,
+                                  originalIndex,
+                                ),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 6,
@@ -185,7 +195,11 @@ class FuelEntryList extends StatelessWidget {
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(6),
-                            onTap: () => _showDeleteConfirmation(context, originalIndex),
+                            onTap:
+                                () => _showDeleteConfirmation(
+                                  context,
+                                  originalIndex,
+                                ),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: 6,
@@ -214,11 +228,12 @@ class FuelEntryList extends StatelessWidget {
   void _showEditEntryDialog(BuildContext context, FuelEntry entry, int index) {
     showDialog(
       context: context,
-      builder: (context) => EditEntryDialog(
-        controller: controller,
-        entry: entry,
-        index: index,
-      ),
+      builder:
+          (context) => EditEntryDialog(
+            controller: controller,
+            entry: entry,
+            index: index,
+          ),
     );
   }
 
@@ -235,7 +250,7 @@ class FuelEntryList extends StatelessWidget {
           parent: animation,
           curve: Curves.easeInOut,
         );
-        
+
         return ScaleTransition(
           scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
           child: FadeTransition(
@@ -296,7 +311,7 @@ class FuelEntryList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     Padding(
                       padding: const EdgeInsets.all(24),
                       child: Column(
@@ -318,7 +333,7 @@ class FuelEntryList extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -339,7 +354,7 @@ class FuelEntryList extends StatelessWidget {
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              
+
                               ElevatedButton(
                                 onPressed: () {
                                   controller.deleteEntry(index);
@@ -373,7 +388,7 @@ class FuelEntryList extends StatelessWidget {
             ),
           ),
         );
-      }
+      },
     );
   }
 }

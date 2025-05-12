@@ -161,11 +161,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
             color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 22,
-          ),
+          child: Icon(icon, color: Colors.white, size: 22),
         ),
         const SizedBox(height: 6),
         Text(
@@ -179,10 +175,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
         const SizedBox(height: 2),
         Text(
           title,
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.white.withOpacity(0.8),
-          ),
+          style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.8)),
         ),
       ],
     );

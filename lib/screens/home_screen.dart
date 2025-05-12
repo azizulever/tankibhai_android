@@ -164,7 +164,7 @@ class HomePage extends StatelessWidget {
                       style: TextButton.styleFrom(
                         foregroundColor: primaryColor,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 6,
                           vertical: 4,
                         ),
                         visualDensity: VisualDensity.compact,
