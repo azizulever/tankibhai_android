@@ -140,7 +140,7 @@ class _AddEntryDialogState extends State<AddEntryDialog> with SingleTickerProvid
                       ),
                     ),
                     
-                    // Form
+                    // form
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                       child: Form(
