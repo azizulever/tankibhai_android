@@ -58,8 +58,8 @@ class FuelEntryList extends StatelessWidget {
                 : "N/A";
 
         return Container(
-          color: backgroundColor,
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +69,7 @@ class FuelEntryList extends StatelessWidget {
                 height: 42,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.grey[100],
+                  color: Colors.grey[50],
                 ),
                 child: Center(
                   child: Icon(

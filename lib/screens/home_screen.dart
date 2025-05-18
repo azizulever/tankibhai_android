@@ -123,66 +123,74 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Divider(color: Colors.grey[300], thickness: 1),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          controller.selectedVehicleType == 'Car'
-                              ? Icons.directions_car_rounded
-                              : Icons.two_wheeler_rounded,
-                          color: primaryColor,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Fueling History',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: primaryColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const DetailedHistoryScreen(),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 10,
                           ),
+                          visualDensity: VisualDensity.compact,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                      ],
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DetailedHistoryScreen(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.analytics_rounded, size: 16),
-                      label: const Text('See more'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: primaryColor,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              'SEE MORE',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const Icon(
+                              Icons.keyboard_double_arrow_right,
+                              size: 16,
+                            ),
+                          ],
                         ),
-                        visualDensity: VisualDensity.compact,
                       ),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child:
-                    controller.filteredEntries.isEmpty
-                        ? EmptyHistoryPlaceholder(
-                          vehicleType: controller.selectedVehicleType,
-                        )
-                        : FuelEntryList(
-                          entries: controller.filteredEntries,
-                          controller: controller,
-                        ),
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child:
+                      controller.filteredEntries.isEmpty
+                          ? EmptyHistoryPlaceholder(
+                            vehicleType: controller.selectedVehicleType,
+                          )
+                          : FuelEntryList(
+                            entries: controller.filteredEntries,
+                            controller: controller,
+                          ),
+                ),
               ),
             ],
           ),
