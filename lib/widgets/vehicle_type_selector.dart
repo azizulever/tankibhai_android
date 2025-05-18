@@ -50,11 +50,15 @@ class VehicleTypeSelector extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(2),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 24), // Reduced horizontal padding
+          padding: const EdgeInsets.symmetric(
+            vertical: 4,
+            horizontal: 24,
+          ), // Reduced horizontal padding
           decoration: BoxDecoration(
             color: isSelected ? primaryColor.withOpacity(0.1) : Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: isSelected ? Border.all(color: primaryColor, width: 1) : null,
+            border:
+                isSelected ? Border.all(color: primaryColor, width: 1) : null,
           ),
           child: Row(
             children: [

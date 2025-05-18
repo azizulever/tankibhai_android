@@ -131,6 +131,7 @@ class HomePage extends StatelessWidget {
                       decoration: BoxDecoration(
                         border: Border.all(color: primaryColor),
                         borderRadius: BorderRadius.circular(8),
+                        color: primaryColor.withOpacity(0.1),
                       ),
                       child: TextButton(
                         onPressed: () {
