@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                                       : controller.averageFuelPrice
                                           .toStringAsFixed(1),
                               unit: 'TK/L',
-                              icon: Icons.currency_exchange,
+                              icon: Icons.payments_outlined,
                               isBlue: false,
                             ),
                             _buildStatCard(
@@ -112,7 +112,7 @@ class HomePage extends StatelessWidget {
                                       : controller.lastFuelPrice
                                           .toStringAsFixed(1),
                               unit: 'TK/L',
-                              icon: Icons.currency_exchange,
+                              icon: Icons.payments_outlined,
                               isBlue: true,
                             ),
                           ],

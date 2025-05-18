@@ -123,7 +123,7 @@ class FuelEntryList extends StatelessWidget {
                       ? const Text(
                         'Initial Data',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),
@@ -132,7 +132,7 @@ class FuelEntryList extends StatelessWidget {
                       ? Text(
                         '${mileage.toStringAsFixed(1)} KM/L',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: primaryColor,
                         ),
