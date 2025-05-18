@@ -157,7 +157,7 @@ class HomePage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                              'SEE MORE',
+                              'SEE ALL DETAILS',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,

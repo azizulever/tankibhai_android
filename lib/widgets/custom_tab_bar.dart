@@ -49,9 +49,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
           child: Row(
             children: List.generate(
               widget.tabs.length,
-              (index) => Expanded(
-                child: _buildTabItem(index),
-              ),
+              (index) => Expanded(child: _buildTabItem(index)),
             ),
           ),
         ),
@@ -70,7 +68,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
         widget.onTabChanged(index);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
           color: isSelected ? primaryColor.withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(6),

@@ -37,20 +37,12 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
           ),
           body: Column(
             children: [
-              // Statistics section with gradient background
+              // Statistics section
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      primaryColor,
-                      primaryColor.withOpacity(0.9),
-                      primaryColor.withOpacity(0.6),
-                    ],
-                  ),
+                  color: primaryColor,
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
@@ -97,7 +89,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                 ),
               ),
 
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               CustomTabBar(
                 tabs: const ['All History', 'Recent', 'Best Mileage'],
                 onTabChanged: (index) {
@@ -107,7 +99,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                 },
                 initialIndex: _selectedTabIndex,
               ),
-
+              const SizedBox(height: 4),
               // Tab content
               Expanded(
                 child:
@@ -119,24 +111,48 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                           index: _selectedTabIndex,
                           children: [
                             // All History Tab
-                            FuelEntryList(
-                              entries: controller.filteredEntries,
-                              controller: controller,
-                              listType: "all",
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.grey.shade200),
+                              ),
+                              child: FuelEntryList(
+                                entries: controller.filteredEntries,
+                                controller: controller,
+                                listType: "all",
+                              ),
                             ),
 
                             // Recent Tab
-                            FuelEntryList(
-                              entries: controller.filteredEntries,
-                              controller: controller,
-                              listType: "recent",
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.grey.shade200),
+                              ),
+                              child: FuelEntryList(
+                                entries: controller.filteredEntries,
+                                controller: controller,
+                                listType: "recent",
+                              ),
                             ),
 
                             // Best Mileage Tab
-                            FuelEntryList(
-                              entries: controller.filteredEntries,
-                              controller: controller,
-                              listType: "best",
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.grey.shade200),
+                              ),
+                              child: FuelEntryList(
+                                entries: controller.filteredEntries,
+                                controller: controller,
+                                listType: "best",
+                              ),
                             ),
                           ],
                         ),
