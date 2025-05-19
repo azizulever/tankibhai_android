@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 18, top: 18),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -147,7 +147,7 @@ class HomePage extends StatelessWidget {
                           foregroundColor: primaryColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
-                            vertical: 10,
+                            vertical: 14,
                           ),
                           visualDensity: VisualDensity.compact,
                           minimumSize: Size.zero,
