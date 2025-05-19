@@ -63,12 +63,6 @@ TankiBhai is built with performance and privacy in mind. No personal or sensitiv
 
 ---
 
-## Screenshots
-
-> Add screenshots here to showcase the user interface and key features.
-
----
-
 ## Installation
 
 To run the app locally:
