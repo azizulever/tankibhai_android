@@ -132,19 +132,18 @@ class MileageGetxController extends GetxController {
     if (previousEntry == null) return null;
 
     final distance = currentEntry.odometer - previousEntry.odometer;
-    if (distance <= 0 || previousEntry.fuelAmount <= 0) return null;
+    if (distance <= 0 || currentEntry.fuelAmount <= 0) return null;
 
-    return distance / previousEntry.fuelAmount;
+    // Calculate mileage using current entry's fuel amount (what was filled)
+    return distance / currentEntry.fuelAmount;
   }
 
   double? calculateAverageMileage() {
     double? avgMileage;
-    double totalFuel = 0;
     double totalDistance = 0;
+    double totalFuelUsed = 0;
 
     if (filteredEntries.length >= 2) {
-      double totalFuelUsed = 0;
-
       for (int i = 0; i < filteredEntries.length - 1; i++) {
         final currentEntry = filteredEntries[i];
         final previousEntry = filteredEntries[i + 1];
@@ -152,16 +151,12 @@ class MileageGetxController extends GetxController {
         final distance = currentEntry.odometer - previousEntry.odometer;
         if (distance > 0) {
           totalDistance += distance;
-          totalFuelUsed += previousEntry.fuelAmount;
+          totalFuelUsed += currentEntry.fuelAmount; // Use the current entry's fuel amount
         }
       }
 
       if (totalFuelUsed > 0) {
         avgMileage = totalDistance / totalFuelUsed;
-      }
-
-      for (var entry in filteredEntries) {
-        totalFuel += entry.fuelAmount;
       }
     }
     return avgMileage;
@@ -174,8 +169,8 @@ class MileageGetxController extends GetxController {
       final previousEntry = filteredEntries[1];
 
       final distance = currentEntry.odometer - previousEntry.odometer;
-      if (distance > 0) {
-        latestMileage = distance / previousEntry.fuelAmount;
+      if (distance > 0 && currentEntry.fuelAmount > 0) {
+        latestMileage = distance / currentEntry.fuelAmount; // Use current entry's fuel amount
       }
     }
     return latestMileage;
