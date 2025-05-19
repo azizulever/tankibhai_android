@@ -1,77 +1,77 @@
-# 🚗 TankiBhai - Fuel Tracker App
+# TankiBhai - Fuel Tracker App
 
-**TankiBhai (v1.3.12)** is a comprehensive and user-friendly fuel tracking app designed to help users monitor their vehicle's fuel consumption, mileage, and fuel expenses effectively.
+**TankiBhai (v1.3.12)** is a clean, efficient, and intuitive fuel tracking application designed to help users monitor fuel consumption, mileage, and fuel expenses with ease.
 
 ---
 
-## 📱 Features
+## Features
 
-- ✅ Track fuel consumption for **both cars and motorcycles**
-- 📊 Calculate **average** and **latest mileage** (km/L)
-- 💰 Monitor **fuel costs** and **price per liter**
-- 🗂️ Access a **detailed fueling history** with sorting options:
-  - All records
-  - Most recent
+- Support for tracking both **cars** and **motorcycles**
+- Calculation of **average** and **latest mileage** (km/L)
+- Monitoring of **fuel expenses** and **price per liter**
+- Access to a detailed **fueling history** with sorting options:
+  - All records  
+  - Most recent  
   - Best mileage
-- 📈 View **statistical insights**:
-  - Total fuel used
-  - Total cost
+- Comprehensive **fuel statistics**, including:
+  - Total fuel consumed  
+  - Total expenditure  
   - Total distance traveled
-- 🧑‍💻 Smooth and clean **user interface**
-- ✨ **Animated dialogs** for adding and editing fuel entries
+- User-friendly and responsive **interface**
+- Smooth **animations** for dialogs and transitions
 
 ---
 
-## 🛠 How It Works
+## How It Works
 
-Users can add detailed fuel records including:
+Users can log detailed fuel entries, including:
 
-- 📅 Date of fueling  
-- 📏 Odometer reading  
-- ⛽ Fuel amount (liters)  
-- 💵 Fuel cost  
+- Date of fueling  
+- Odometer reading  
+- Fuel quantity (liters)  
+- Total cost
 
-The app then automatically calculates:
+The application automatically calculates:
 
-- 📐 Mileage (km/L)  
-- 💹 Fuel economy metrics  
+- Mileage (km/L)  
+- Fuel efficiency metrics
 
-These insights help users better understand their vehicle’s performance and manage fuel expenses more efficiently.
-
----
-
-## 📦 Tech Stack
-
-- **Flutter** (Cross-platform framework)
-- Clean architecture & state management
-- UI animations and responsive design
+These insights help users track performance trends and manage fuel costs effectively.
 
 ---
 
-## 🔐 Security & Data Privacy
+## Tech Stack
 
-TankiBhai is designed with performance and privacy in mind. No sensitive user data is collected or shared.
+- **Flutter** (cross-platform mobile development)
+- **Clean architecture** with state management
+- Responsive UI with modern animation practices
 
 ---
 
-## 🚧 Future Improvements (Optional)
+## Security & Data Privacy
 
-- Cloud sync or backup
-- Multi-vehicle support
+TankiBhai is built with performance and privacy in mind. No personal or sensitive user data is collected or shared.
+
+---
+
+## Planned Enhancements
+
+- Cloud backup and sync
+- Multi-vehicle tracking
 - Data export (CSV, Excel)
-- Dark mode
+- Dark mode support
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
-*Add screenshots here to showcase UI and features.*
+> Add screenshots here to showcase the user interface and key features.
 
 ---
 
-## 📥 Installation
+## Installation
 
-To run locally:
+To run the app locally:
 
 ```bash
 git clone https://github.com/your-username/tankibhai.git
