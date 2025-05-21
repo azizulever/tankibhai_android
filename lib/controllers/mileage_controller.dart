@@ -133,8 +133,6 @@ class MileageGetxController extends GetxController {
 
     final distance = currentEntry.odometer - previousEntry.odometer;
     if (distance <= 0 || currentEntry.fuelAmount <= 0) return null;
-
-    // Calculate mileage using current entry's fuel amount (what was filled)
     return distance / currentEntry.fuelAmount;
   }
 
