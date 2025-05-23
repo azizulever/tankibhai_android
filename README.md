@@ -43,7 +43,7 @@ These insights help users track performance trends and manage fuel costs effecti
 ## Tech Stack
 
 - **Flutter** (cross-platform mobile development)
-- **Clean architecture** with state management
+- **Clean architecture** with state management 
 - Responsive UI with modern animation practices
 
 ---
