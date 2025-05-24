@@ -22,7 +22,7 @@
 
 ---
 
-## How It Works
+## How It Works 
 
 Users can log detailed fuel entries, including:
 
