@@ -9,7 +9,7 @@
 - Support for tracking both **cars** and **motorcycles** 
 - Calculation of **average** and **latest mileage** (km/L)
 - Monitoring of **fuel expenses** and **price per liter**
-- Access to a detailed **fueling history** with sorting options:
+- Access to a detailed **fueling history** with sorting options: 
   - All records  
   - Most recent  
   - Best mileage
