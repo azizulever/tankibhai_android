@@ -4,7 +4,7 @@
 
 ---
 
-## Features
+## Features 
 
 - Support for tracking both **cars** and **motorcycles** 
 - Calculation of **average** and **latest mileage** (km/L)
