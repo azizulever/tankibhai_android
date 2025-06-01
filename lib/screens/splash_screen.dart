@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'home_screen.dart';
+import 'package:mileage_calculator/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -49,53 +48,57 @@ class _SplashScreenState extends State<SplashScreen>
           opacity: _animation,
           child: Column(
             children: [
-              Expanded(
-                flex: 5,
-                child: Center(
-                  child: SvgPicture.asset(
-                    'assets/app_logo.svg',
-                    width: 120,
-                    height: 120,
-                  ),
+              const SizedBox(height: 300),
+              Center(
+                child: SvgPicture.asset(
+                  'assets/app_logo.svg',
+                  width: 120,
+                  height: 120,
                 ),
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    Text(
-                      'Track Fuel & Drive Smart',
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: 50,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Color(0xFFE0E0E0),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: const LinearProgressIndicator(
-                            minHeight: 3,
-                            backgroundColor: Colors.transparent,
-                          ),
+              Column(
+                children: [
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    width: 100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Color(0xFFE0E0E0),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: const LinearProgressIndicator(
+                          minHeight: 3,
+                          backgroundColor: Colors.transparent,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    Text(
-                      'Version 1.3.13',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Track Fuel & Drive Smart',
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  const SizedBox(height: 260),
+                  Text(
+                    'Version: Beta',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                  ),
+                  Text(
+                    'Copyright ©️ 2025, Azizul & Ever',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ],
           ),
