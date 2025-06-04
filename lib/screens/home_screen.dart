@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
+import 'package:mileage_calculator/screens/about_screen.dart';
 import 'package:mileage_calculator/screens/detailed_history_screen.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
@@ -24,6 +25,20 @@ class HomePage extends StatelessWidget {
             ),
             centerTitle: true,
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
+                },
+                tooltip: 'About & Privacy Policy',
+              ),
+            ],
           ),
           body: Column(
             children: [
