@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   Text(
-                    'Copyright ©️ 2025, Azizul & Ever',
+                    'Copyright ©️2025, Azizul & Ever',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[600],
