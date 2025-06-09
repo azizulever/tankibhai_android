@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
 import 'package:mileage_calculator/screens/about_screen.dart';
+import 'package:mileage_calculator/screens/auth/welcome_screen.dart';
 import 'package:mileage_calculator/screens/detailed_history_screen.dart';
+import 'package:mileage_calculator/services/auth_service.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
 import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
 import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
 import 'package:mileage_calculator/widgets/vehicle_type_selector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -26,17 +29,125 @@ class HomePage extends StatelessWidget {
             centerTitle: true,
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
             actions: [
-              IconButton(
-                icon: const Icon(Icons.info_outline_rounded),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AboutScreen(),
-                    ),
-                  );
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  switch (value) {
+                    case 'about':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutScreen(),
+                        ),
+                      );
+                      break;
+                    case 'logout':
+                      _showLogoutDialog(context);
+                      break;
+                    case 'login':
+                      Get.to(() => const WelcomeScreen());
+                      break;
+                  }
                 },
-                tooltip: 'About & Privacy Policy',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 8,
+                shadowColor: Colors.black26,
+                offset: const Offset(0, 4),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'about',
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.info_outline_rounded,
+                              color: primaryColor,
+                              size: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          const Text(
+                            'About & Privacy',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (!_isUserLoggedIn())
+                    PopupMenuItem(
+                      value: 'login',
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.login_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Login / Register',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (_isUserLoggedIn())
+                    PopupMenuItem(
+                      value: 'logout',
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.logout_rounded,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
@@ -74,7 +185,7 @@ class HomePage extends StatelessWidget {
                       builder: (context, constraints) {
                         return GridView.count(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount: 2,
                           childAspectRatio:
                               constraints.maxWidth > 600 ? 2.0 : 1.6,
@@ -168,17 +279,17 @@ class HomePage extends StatelessWidget {
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text(
+                            Text(
                               'SEE ALL DETAILS',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.keyboard_double_arrow_right,
                               size: 16,
                             ),
@@ -244,6 +355,49 @@ class HomePage extends StatelessWidget {
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
+    );
+  }
+
+  bool _isUserLoggedIn() {
+    try {
+      final authService = Get.find<AuthService>();
+      return authService.isLoggedIn.value;
+    } catch (e) {
+      // AuthService not initialized, user is not logged in
+      return false;
+    }
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                final authService = Get.find<AuthService>();
+                await authService.signOut();
+              } catch (e) {
+                // AuthService not found, just clear local storage
+              }
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('skipped_login');
+              Get.offAll(() => const WelcomeScreen());
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Logout', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 
