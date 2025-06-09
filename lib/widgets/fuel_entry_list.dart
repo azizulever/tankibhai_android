@@ -22,17 +22,29 @@ class FuelEntryList extends StatelessWidget {
     List<FuelEntry> filteredEntries = entries;
     if (listType == "recent") {
       filteredEntries = entries.length > 5 ? entries.sublist(0, 5) : entries;
-    } else if (listType == "best") {
+    } else if (listType == "best_mileage") {
       filteredEntries = List<FuelEntry>.from(entries);
       filteredEntries.sort((a, b) {
         final mileageA = controller.calculateMileage(a, null) ?? 0;
         final mileageB = controller.calculateMileage(b, null) ?? 0;
         return mileageB.compareTo(mileageA);
       });
-      filteredEntries =
-          filteredEntries.length > 5
-              ? filteredEntries.sublist(0, 5)
-              : filteredEntries;
+      // Remove entries without mileage calculation (first entries)
+      filteredEntries = filteredEntries.where((entry) {
+        final index = entries.indexOf(entry);
+        final previousEntry = index < entries.length - 1 ? entries[index + 1] : null;
+        return controller.calculateMileage(entry, previousEntry) != null;
+      }).toList();
+      filteredEntries = filteredEntries.length > 5 ? filteredEntries.sublist(0, 5) : filteredEntries;
+    } else if (listType == "best_cost") {
+      filteredEntries = List<FuelEntry>.from(entries);
+      // Sort by fuel cost per liter (lowest to highest)
+      filteredEntries.sort((a, b) {
+        final costPerLiterA = a.fuelAmount > 0 ? (a.fuelCost / a.fuelAmount) : double.infinity;
+        final costPerLiterB = b.fuelAmount > 0 ? (b.fuelCost / b.fuelAmount) : double.infinity;
+        return costPerLiterA.compareTo(costPerLiterB);
+      });
+      filteredEntries = filteredEntries.length > 5 ? filteredEntries.sublist(0, 5) : filteredEntries;
     }
 
     return ListView.separated(

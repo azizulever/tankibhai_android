@@ -91,7 +91,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
 
               const SizedBox(height: 8),
               CustomTabBar(
-                tabs: const ['All History', 'Recent', 'Best Mileage'],
+                tabs: const ['All History', 'Best Cost', 'Best Mileage'],
                 onTabChanged: (index) {
                   setState(() {
                     _selectedTabIndex = index;
@@ -107,54 +107,14 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                         ? EmptyHistoryPlaceholder(
                           vehicleType: controller.selectedVehicleType,
                         )
-                        : IndexedStack(
-                          index: _selectedTabIndex,
-                          children: [
-                            // All History Tab
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: Colors.grey.shade200),
-                              ),
-                              child: FuelEntryList(
-                                entries: controller.filteredEntries,
-                                controller: controller,
-                                listType: "all",
-                              ),
-                            ),
-
-                            // Recent Tab
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: Colors.grey.shade200),
-                              ),
-                              child: FuelEntryList(
-                                entries: controller.filteredEntries,
-                                controller: controller,
-                                listType: "recent",
-                              ),
-                            ),
-
-                            // Best Mileage Tab
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: Colors.grey.shade200),
-                              ),
-                              child: FuelEntryList(
-                                entries: controller.filteredEntries,
-                                controller: controller,
-                                listType: "best",
-                              ),
-                            ),
-                          ],
+                        : Container(
+                          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: Colors.grey.shade200),
+                          ),
+                          child: _buildTabContent(controller),
                         ),
               ),
             ],
@@ -195,5 +155,34 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildTabContent(MileageGetxController controller) {
+    switch (_selectedTabIndex) {
+      case 0: // All History
+        return FuelEntryList(
+          entries: controller.filteredEntries,
+          controller: controller,
+          listType: "all",
+        );
+      case 1: // Best Cost
+        return FuelEntryList(
+          entries: controller.filteredEntries,
+          controller: controller,
+          listType: "best_cost",
+        );
+      case 2: // Best Mileage
+        return FuelEntryList(
+          entries: controller.filteredEntries,
+          controller: controller,
+          listType: "best_mileage",
+        );
+      default:
+        return FuelEntryList(
+          entries: controller.filteredEntries,
+          controller: controller,
+          listType: "all",
+        );
+    }
   }
 }
