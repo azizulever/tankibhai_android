@@ -4,6 +4,7 @@ import 'package:mileage_calculator/screens/auth/login_screen.dart';
 import 'package:mileage_calculator/screens/auth/registration_screen.dart';
 import 'package:mileage_calculator/screens/home_screen.dart';
 import 'package:mileage_calculator/utils/theme.dart';
+import 'package:mileage_calculator/widgets/main_navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -263,7 +264,7 @@ class WelcomeScreen extends StatelessWidget {
             onPressed: () async {
               Navigator.pop(context);
               await _setSkippedLogin();
-              Get.offAll(() => const HomePage());
+              Get.offAll(() => const MainNavigation());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,

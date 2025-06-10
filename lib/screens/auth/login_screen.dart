@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/screens/auth/forgot_password_screen.dart';
 import 'package:mileage_calculator/screens/auth/registration_screen.dart';
-import 'package:mileage_calculator/screens/home_screen.dart';
+import 'package:mileage_calculator/widgets/main_navigation.dart';
 import 'package:mileage_calculator/services/auth_service.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 
@@ -364,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       
       if (result) {
-        Get.offAll(() => const HomePage());
+        Get.offAll(() => const MainNavigation());
       }
     }
   }
@@ -372,7 +372,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _signInWithGoogle() async {
     final result = await _authService.signInWithGoogle();
     if (result) {
-      Get.offAll(() => const HomePage());
+      Get.offAll(() => const MainNavigation());
     }
   }
 }
