@@ -77,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Track Fuel & Drive Smart',
+                    'Smart Fuel Tracking',
                     style: TextStyle(fontSize: 14, color: Colors.black),
                   ),
                   const SizedBox(height: 260),
