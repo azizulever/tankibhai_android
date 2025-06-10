@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mileage_calculator/utils/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Mock auth service for when Firebase is not configured
 class AuthService extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoggedIn = false.obs;
 
-  Future<bool> registerWithEmail(String email, String password) async {
+  Future<bool> registerWithEmail(String email, String password, {String? name}) async {
     try {
       isLoading.value = true;
       // Simulate API call
@@ -14,11 +16,23 @@ class AuthService extends GetxController {
 
       // Mock successful registration
       isLoggedIn.value = true;
+      
+      // Save user data
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', email);
+      await prefs.setString('user_name', name ?? 'User');
+      
       Get.snackbar(
         'Success',
         'Account created successfully',
-        backgroundColor: const Color(0xFF0045ED),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        shouldIconPulse: false,
+        duration: const Duration(seconds: 3),
       );
       return true;
     } catch (e) {
@@ -40,11 +54,23 @@ class AuthService extends GetxController {
 
       // Mock successful login
       isLoggedIn.value = true;
+      
+      // Save user data
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', email);
+      await prefs.setString('user_name', 'John Doe'); // Mock name
+      
       Get.snackbar(
         'Success',
         'Logged in successfully',
-        backgroundColor: const Color(0xFF0045ED),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        shouldIconPulse: false,
+        duration: const Duration(seconds: 3),
       );
       return true;
     } catch (e) {
@@ -63,11 +89,23 @@ class AuthService extends GetxController {
 
       // Mock successful Google sign-in
       isLoggedIn.value = true;
+      
+      // Save user data
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_email', 'user@gmail.com');
+      await prefs.setString('user_name', 'Google User');
+      
       Get.snackbar(
         'Success',
         'Signed in with Google successfully',
-        backgroundColor: const Color(0xFF0045ED),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        shouldIconPulse: false,
+        duration: const Duration(seconds: 3),
       );
       return true;
     } catch (e) {
@@ -89,8 +127,14 @@ class AuthService extends GetxController {
       Get.snackbar(
         'Success',
         'Password reset email sent to $email',
-        backgroundColor: const Color(0xFF0045ED),
-        colorText: const Color(0xFFFFFFFF),
+        backgroundColor: primaryColor,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        shouldIconPulse: false,
+        duration: const Duration(seconds: 3),
       );
     } catch (e) {
       Get.snackbar('Error', 'An error occurred while sending reset email');
@@ -101,11 +145,23 @@ class AuthService extends GetxController {
 
   Future<void> signOut() async {
     isLoggedIn.value = false;
+    
+    // Clear user data from SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_name');
+    await prefs.remove('user_email');
+    
     Get.snackbar(
       'Success',
       'Logged out successfully',
-      backgroundColor: const Color(0xFF0045ED),
-      colorText: const Color(0xFFFFFFFF),
+      backgroundColor: primaryColor,
+      colorText: Colors.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      snackPosition: SnackPosition.TOP,
+      icon: const Icon(Icons.check_circle, color: Colors.white),
+      shouldIconPulse: false,
+      duration: const Duration(seconds: 3),
     );
   }
 }

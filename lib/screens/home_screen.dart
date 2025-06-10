@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mileage_calculator/controllers/mileage_controller.dart';
 import 'package:mileage_calculator/screens/about_screen.dart';
+import 'package:mileage_calculator/screens/auth/user_profile_screen.dart';
 import 'package:mileage_calculator/screens/auth/welcome_screen.dart';
 import 'package:mileage_calculator/screens/detailed_history_screen.dart';
 import 'package:mileage_calculator/services/auth_service.dart';
@@ -9,11 +10,14 @@ import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
 import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
 import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
+import 'package:mileage_calculator/widgets/main_navigation.dart';
 import 'package:mileage_calculator/widgets/vehicle_type_selector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final bool showBottomNav;
+  
+  const HomePage({super.key, this.showBottomNav = true});
 
   @override
   Widget build(BuildContext context) {
@@ -28,126 +32,19 @@ class HomePage extends StatelessWidget {
             ),
             centerTitle: true,
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            leading: _buildUserNameButton(),
             actions: [
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'about':
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AboutScreen(),
-                        ),
-                      );
-                      break;
-                    case 'logout':
-                      _showLogoutDialog(context);
-                      break;
-                    case 'login':
-                      Get.to(() => const WelcomeScreen());
-                      break;
-                  }
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AboutScreen(),
+                    ),
+                  );
                 },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 8,
-                shadowColor: Colors.black26,
-                offset: const Offset(0, 4),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'about',
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.info_outline_rounded,
-                              color: primaryColor,
-                              size: 18,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'About & Privacy',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  if (!_isUserLoggedIn())
-                    PopupMenuItem(
-                      value: 'login',
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.login_rounded,
-                                color: Colors.green,
-                                size: 18,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'Login / Register',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  if (_isUserLoggedIn())
-                    PopupMenuItem(
-                      value: 'logout',
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.logout_rounded,
-                                color: Colors.red,
-                                size: 18,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              'Logout',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
+                icon: const Icon(Icons.info_outline_rounded),
+                tooltip: 'About & Privacy',
               ),
             ],
           ),
@@ -248,58 +145,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18, top: 18),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: primaryColor),
-                        borderRadius: BorderRadius.circular(8),
-                        color: primaryColor.withOpacity(0.1),
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const DetailedHistoryScreen(),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: primaryColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 14,
-                          ),
-                          visualDensity: VisualDensity.compact,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'SEE ALL DETAILS',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_double_arrow_right,
-                              size: 16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              
+              const SizedBox(height: 12),
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -321,41 +168,159 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          bottomNavigationBar: null,
-          floatingActionButton: Container(
-            margin: const EdgeInsets.only(bottom: 16, right: 16),
-            height: 56,
-            child: FloatingActionButton.extended(
-              onPressed:
-                  () => showDialog(
-                    context: context,
-                    builder:
-                        (context) => AddEntryDialog(controller: controller),
-                  ),
-              icon: const Icon(
-                Icons.add_circle_outline_rounded,
-                size: 20,
-                color: Colors.white,
-              ),
-              label: Text(
-                'Add ${controller.selectedVehicleType} Entry',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+          bottomNavigationBar: showBottomNav ? Container(
+            decoration: BoxDecoration(
+              color: primaryColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              child: Container(
+                height: 70,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildBottomNavItem(
+                      icon: Icons.home_outlined,
+                      label: 'Home',
+                      isActive: true,
+                      onTap: () {
+                        // Already on home
+                      },
+                    ),
+                    _buildBottomNavItem(
+                      icon: Icons.list_alt_rounded,
+                      label: 'Detailed Log',
+                      isActive: false,
+                      onTap: () => Get.off(() => const MainNavigation(initialIndex: 1)),
+                    ),
+                    _buildBottomNavItem(
+                      icon: Icons.person_outline_rounded,
+                      label: 'Profile',
+                      isActive: false,
+                      onTap: () => Get.off(() => const MainNavigation(initialIndex: 2)),
+                    ),
+                    _buildCenterAddButton(context, controller),
+                  ],
                 ),
               ),
-              backgroundColor: primaryColor,
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
             ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          ) : null,
         );
       },
     );
+  }
+
+  Widget _buildBottomNavItem({
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isActive ? Colors.white : Colors.white.withOpacity(0.6),
+              size: 24,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive ? Colors.white : Colors.white.withOpacity(0.6),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCenterAddButton(BuildContext context, MileageGetxController controller) {
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => AddEntryDialog(controller: controller),
+      ),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.add,
+          color: primaryColor,
+          size: 28,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserNameButton() {
+    return FutureBuilder<String>(
+      future: _getUserFirstName(),
+      builder: (context, snapshot) {
+        final firstName = snapshot.data ?? 'G';
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => Get.to(() => const UserProfileScreen()),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: primaryColor.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  firstName.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<String> _getUserFirstName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final fullName = prefs.getString('user_name') ?? 'Guest User';
+    final firstName = fullName.split(' ').first;
+    return firstName.isNotEmpty ? firstName.substring(0, 1) : 'G';
   }
 
   bool _isUserLoggedIn() {
@@ -371,33 +336,39 @@ class HomePage extends StatelessWidget {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text('Logout'),
+            content: const Text('Are you sure you want to logout?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  try {
+                    final authService = Get.find<AuthService>();
+                    await authService.signOut();
+                  } catch (e) {
+                    // AuthService not found, just clear local storage
+                  }
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('skipped_login');
+                  Get.offAll(() => const WelcomeScreen());
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                final authService = Get.find<AuthService>();
-                await authService.signOut();
-              } catch (e) {
-                // AuthService not found, just clear local storage
-              }
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.remove('skipped_login');
-              Get.offAll(() => const WelcomeScreen());
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Logout', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
     );
   }
 

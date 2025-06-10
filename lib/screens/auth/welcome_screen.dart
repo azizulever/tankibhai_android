@@ -282,5 +282,8 @@ class WelcomeScreen extends StatelessWidget {
   Future<void> _setSkippedLogin() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('skipped_login', true);
+    // Set default guest user data
+    await prefs.setString('user_name', 'Guest User');
+    await prefs.setString('user_email', 'guest@tankibhai.com');
   }
 }

@@ -5,9 +5,13 @@ import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/custom_tab_bar.dart';
 import 'package:mileage_calculator/widgets/empty_history_placeholder.dart';
 import 'package:mileage_calculator/widgets/fuel_entry_list.dart';
+import 'package:mileage_calculator/widgets/add_entry_dialog.dart';
+import 'package:mileage_calculator/widgets/main_navigation.dart';
 
 class DetailedHistoryScreen extends StatefulWidget {
-  const DetailedHistoryScreen({Key? key}) : super(key: key);
+  final bool showBottomNav;
+
+  const DetailedHistoryScreen({Key? key, this.showBottomNav = true}) : super(key: key);
 
   @override
   State<DetailedHistoryScreen> createState() => _DetailedHistoryScreenState();
@@ -19,6 +23,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MileageGetxController>(
+      init: MileageGetxController(),
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(
@@ -30,10 +35,10 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
             elevation: 0,
-            leading: IconButton(
+            leading: widget.showBottomNav ? IconButton(
               icon: const Icon(Icons.arrow_back_rounded),
               onPressed: () => Navigator.of(context).pop(),
-            ),
+            ) : null,
           ),
           body: Column(
             children: [
@@ -66,20 +71,17 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                         children: [
                           _buildStatItem(
                             title: 'Total Fuel',
-                            value:
-                                '${controller.getTotalFuel().toStringAsFixed(2)}L',
+                            value: '${controller.getTotalFuel().toStringAsFixed(2)}L',
                             icon: Icons.local_gas_station_rounded,
                           ),
                           _buildStatItem(
                             title: 'Total Cost',
-                            value:
-                                '৳${controller.getTotalCost().toStringAsFixed(0)}',
+                            value: '৳${controller.getTotalCost().toStringAsFixed(0)}',
                             icon: Icons.payments_rounded,
                           ),
                           _buildStatItem(
                             title: 'Total Distance',
-                            value:
-                                '${controller.getTotalDistance().toStringAsFixed(0)}KM',
+                            value: '${controller.getTotalDistance().toStringAsFixed(0)}KM',
                             icon: Icons.map_rounded,
                           ),
                         ],
@@ -102,23 +104,23 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
               const SizedBox(height: 4),
               // Tab content
               Expanded(
-                child:
-                    controller.filteredEntries.isEmpty
-                        ? EmptyHistoryPlaceholder(
-                          vehicleType: controller.selectedVehicleType,
-                        )
-                        : Container(
-                          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: _buildTabContent(controller),
+                child: controller.filteredEntries.isEmpty
+                    ? EmptyHistoryPlaceholder(
+                        vehicleType: controller.selectedVehicleType,
+                      )
+                    : Container(
+                        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: Colors.grey.shade200),
                         ),
+                        child: _buildTabContent(controller),
+                      ),
               ),
             ],
           ),
+          bottomNavigationBar: widget.showBottomNav ? _buildBottomNavigation(context, controller) : null,
         );
       },
     );
@@ -184,5 +186,114 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
           listType: "all",
         );
     }
+  }
+
+  Widget _buildBottomNavigation(BuildContext context, MileageGetxController controller) {
+    return Container(
+      decoration: BoxDecoration(
+        color: primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Container(
+          height: 70,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildBottomNavItem(
+                icon: Icons.home_outlined,
+                label: 'Home',
+                isActive: false,
+                onTap: () => Get.off(() => const MainNavigation(initialIndex: 0)),
+              ),
+              _buildBottomNavItem(
+                icon: Icons.list_alt_rounded,
+                label: 'Detailed Log',
+                isActive: true,
+                onTap: () {
+                  // Already on detailed log
+                },
+              ),
+              _buildBottomNavItem(
+                icon: Icons.person_outline_rounded,
+                label: 'Profile',
+                isActive: false,
+                onTap: () => Get.off(() => const MainNavigation(initialIndex: 2)),
+              ),
+              _buildCenterAddButton(context, controller),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavItem({
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isActive ? Colors.white : Colors.white.withOpacity(0.6),
+              size: 24,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive ? Colors.white : Colors.white.withOpacity(0.6),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCenterAddButton(BuildContext context, MileageGetxController controller) {
+    return GestureDetector(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => AddEntryDialog(controller: controller),
+      ),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.add,
+          color: primaryColor,
+          size: 28,
+        ),
+      ),
+    );
   }
 }

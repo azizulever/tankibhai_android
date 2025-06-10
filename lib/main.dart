@@ -6,6 +6,7 @@ import 'package:mileage_calculator/screens/home_screen.dart';
 import 'package:mileage_calculator/screens/splash_screen.dart';
 import 'package:mileage_calculator/services/auth_service.dart';
 import 'package:mileage_calculator/utils/theme.dart';
+import 'package:mileage_calculator/widgets/main_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,6 +102,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
       return const SplashScreen();
     }
 
-    return _shouldShowWelcome ? const WelcomeScreen() : const HomePage();
+    return _shouldShowWelcome ? const WelcomeScreen() : const MainNavigation();
   }
 }
