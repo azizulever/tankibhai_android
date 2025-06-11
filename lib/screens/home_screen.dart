@@ -182,7 +182,7 @@ class HomePage extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: () => Get.to(() => const UserProfileScreen()),
+            onTap: () => Get.offAll(() => const MainNavigation(initialIndex: 3)),
             child: Container(
               width: 40,
               height: 40,

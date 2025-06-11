@@ -27,6 +27,7 @@ class _MainNavigationState extends State<MainNavigation> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
+    print("MainNavigation initialized with index: $_currentIndex");
   }
 
   @override
@@ -48,6 +49,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    print("Building MainNavigation with currentIndex: $_currentIndex");
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -57,10 +59,10 @@ class _MainNavigationState extends State<MainNavigation> {
           });
         },
         children: const [
-          HomeContent(),
-          DetailedHistoryContent(),
-          NotificationContent(),
-          UserProfileContent(),
+          HomePage(showBottomNav: false),
+          DetailedHistoryScreen(showBottomNav: false),
+          NotificationScreen(showBottomNav: false),
+          UserProfileScreen(showBottomNav: false),
         ],
       ),
       bottomNavigationBar: Container(
