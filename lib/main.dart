@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mileage_calculator/screens/auth/welcome_screen.dart';
-import 'package:mileage_calculator/screens/home_screen.dart';
 import 'package:mileage_calculator/screens/splash_screen.dart';
 import 'package:mileage_calculator/services/auth_service.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 import 'package:mileage_calculator/widgets/main_navigation.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:mileage_calculator/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Note: Firebase initialization will be added later when you configure Firebase
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MileageCalculatorApp());
 }
 
@@ -51,15 +54,18 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     final prefs = await SharedPreferences.getInstance();
     final skippedLogin = prefs.getBool('skipped_login') ?? false;
+    
+    // Initialize auth service and get current Firebase user
     final authService = Get.put(AuthService());
+    final currentUser = FirebaseAuth.instance.currentUser;
 
-    if (skippedLogin || authService.isLoggedIn.value) {
+    if (skippedLogin || currentUser != null) {
       setState(() {
         _shouldShowWelcome = false;
         _isLoading = false;
       });
 
-      if (skippedLogin) {
+      if (skippedLogin && currentUser == null) {
         _showDataWarningSnackbar();
       }
     } else {

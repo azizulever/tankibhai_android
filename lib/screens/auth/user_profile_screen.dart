@@ -4,6 +4,7 @@ import 'package:mileage_calculator/screens/auth/welcome_screen.dart';
 import 'package:mileage_calculator/services/auth_service.dart';
 import 'package:mileage_calculator/utils/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final bool showBottomNav;
@@ -18,8 +19,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final AuthService _authService = Get.find<AuthService>();
   
   bool _isEditing = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -35,9 +38,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   void _loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    _nameController.text = prefs.getString('user_name') ?? 'Guest User';
-    _emailController.text = prefs.getString('user_email') ?? 'guest@tankibhai.com';
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final User? currentUser = FirebaseAuth.instance.currentUser;
+      
+      if (currentUser != null) {
+        // Try to get the latest user data (in case it was updated elsewhere)
+        await currentUser.reload();
+        
+        // Now set text controller values
+        _nameController.text = currentUser.displayName ?? 'Guest User';
+        _emailController.text = currentUser.email ?? 'guest@tankibhai.com';
+      } else {
+        // Fallback to SharedPreferences if no Firebase user (guest mode)
+        final prefs = await SharedPreferences.getInstance();
+        _nameController.text = prefs.getString('user_name') ?? 'Guest User';
+        _emailController.text = prefs.getString('user_email') ?? 'guest@tankibhai.com';
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error loading user data: $e');
+      
+      // Fallback values
+      _nameController.text = 'Guest User';
+      _emailController.text = 'guest@tankibhai.com';
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -379,25 +413,56 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_name', _nameController.text.trim());
-      
       setState(() {
-        _isEditing = false;
+        _isLoading = true;
       });
       
-      Get.snackbar(
-        'Success',
-        'Profile updated successfully',
-        backgroundColor: primaryColor,
-        colorText: Colors.white,
-        borderRadius: 12,
-        margin: const EdgeInsets.all(16),
-        snackPosition: SnackPosition.TOP,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        shouldIconPulse: false,
-        duration: const Duration(seconds: 3),
-      );
+      try {
+        final User? currentUser = FirebaseAuth.instance.currentUser;
+        
+        if (currentUser != null) {
+          // Update Firebase display name
+          await currentUser.updateDisplayName(_nameController.text.trim());
+          
+          // Save to local storage as well
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_name', _nameController.text.trim());
+        } else {
+          // Only update local storage for guest users
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_name', _nameController.text.trim());
+        }
+        
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully',
+          backgroundColor: primaryColor,
+          colorText: Colors.white,
+          borderRadius: 12,
+          margin: const EdgeInsets.all(16),
+          snackPosition: SnackPosition.TOP,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          shouldIconPulse: false,
+          duration: const Duration(seconds: 3),
+        );
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Failed to update profile: ${e.toString()}',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          borderRadius: 12,
+          margin: const EdgeInsets.all(16),
+          snackPosition: SnackPosition.TOP,
+        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+            _isEditing = false;
+          });
+        }
+      }
     }
   }
 
@@ -419,16 +484,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              try {
-                final authService = Get.find<AuthService>();
-                await authService.signOut();
-              } catch (e) {
-                // Handle error
-              }
+              await _authService.signOut();
               final prefs = await SharedPreferences.getInstance();
               await prefs.remove('skipped_login');
-              await prefs.remove('user_name');
-              await prefs.remove('user_email');
               Get.offAll(() => const WelcomeScreen());
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
