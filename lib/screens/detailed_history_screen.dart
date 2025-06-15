@@ -119,7 +119,7 @@ class _DetailedHistoryScreenState extends State<DetailedHistoryScreen> {
                       ),
               ),
             ],
-          ),
+          ), 
           bottomNavigationBar: widget.showBottomNav ? _buildBottomNavigation(context, controller) : null,
         );
       },
